@@ -60,8 +60,10 @@ sequenceDiagram
         Browser->>App: POST user/pass 
         alt user/pass is OK
             App->>Browser: HTML page
+            Note over App,User: Now user can interact with page
         else not OK
             App->>Browser: Login form
+            Note over App,User: Repeat prompting
         end
     end    
  ```
