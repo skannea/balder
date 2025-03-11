@@ -20,43 +20,12 @@ https://github.com/bjorne/git-pa-svenska
 https://gist.github.com/kmpm/21a9ede21c49904c98063cd51c56bad1
 
 
-<details>
-
-
-<summary>Demo av mermaid</summary> 
-
-
-    <-----> HA     
-    --> ws connect 
-    
-    <-- auth_required  
-    --> token
-    <-- auth_ok
-
-    --> requests: subscribe for entity changes
-    --> request:  subscribe for INBOUNDEVENT 
-    <-- responses: successful subscriptions
-    --> requests: get all states and attributes
-    <-- responses: all states and attributes
-
-    <-- entity changes
-    --> user input
-    <-- 'to_gridpanels_event'
-    --> 'from_gridpanels_event'
-
-
-        If GET: get username and password token from cookies
-        If POST: get username and password from login form
-        Check access rights and return HTML page if OK.
-        If not, return login form.
-
 
 ### App communication with HA
 ```mermaid
 sequenceDiagram
     participant App
     participant HA
-
     App->>HA: ws connect
     HA->>App: auth_required
     App->>HA: token
@@ -83,10 +52,11 @@ sequenceDiagram
     Browser->>App: GET gridpanels.html 
     alt user/pass in cookies and OK
         App->>Browser: HTML page and set cookies
-        Note over App,Browser: Now user can interact with page
+        Note over App,User: Now user can interact with page
     else missing
         App->>Browser: Login form
-        User->>Browser: fill out login form
+        Browser->>User: prompt for user/pass
+        User->>Browser: user/pass into login form
         Browser->>App: POST user/pass 
         alt user/pass is OK
             App->>Browser: HTML page
@@ -95,6 +65,7 @@ sequenceDiagram
         end
     end    
  ```
+
 ### User interacts with page
 ```mermaid
 sequenceDiagram
@@ -110,7 +81,8 @@ sequenceDiagram
     App->>HA: call service for entity
 
  ```
-</details>
+
+
 
 <details>
 
