@@ -19,18 +19,97 @@ https://github.com/bjorne/git-pa-svenska
 
 https://gist.github.com/kmpm/21a9ede21c49904c98063cd51c56bad1
 
+
 <details>
+
 
 <summary>Demo av mermaid</summary>
 
 
+    <-----> HA     
+    --> ws connect 
+    
+    <-- auth_required  
+    --> token
+    <-- auth_ok
+
+    --> requests: subscribe for entity changes
+    --> request:  subscribe for INBOUNDEVENT 
+    <-- responses: successful subscriptions
+    --> requests: get all states and attributes
+    <-- responses: all states and attributes
+
+    <-- entity changes
+    --> user input
+    <-- 'to_gridpanels_event'
+    --> 'from_gridpanels_event'
+
+
+        If GET: get username and password token from cookies
+        If POST: get username and password from login form
+        Check access rights and return HTML page if OK.
+        If not, return login form.
+
+
+### App communication with HA
 ```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+sequenceDiagram
+    participant App
+    participant HA
+
+    App->>HA: ws connect
+    HA->>App: auth_required
+    App->>HA: token
+    HA->>App: auth_ok
+    App->>HA: requests, subscribe for entity changes
+    App->>HA: request, subscribe for INBOUNDEVENT 
+    HA-)App: responses, successful subscriptions
+    App->>HA: requests, get all states and attributes
+    HA-)App: responses, all states and attributes
+    HA-)App: entity state changes
+    App-)HA: user input
+    HA-)App: INBOUNDEVENTs
+    App-)HA: OUTBOUNDEVENTs
 ```
+
+### User connects to get page
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant App
+
+    User->>Browser: surf to gridpanels.html
+    Browser->>App: GET gridpanels.html 
+    alt user/pass in cookies and OK
+        App->>Browser: HTML page and set cookies
+        Note over App,Browser: Now user can interact with page
+    else missing
+        App->>Browser: Login form
+        User->>Browser: fill out login form
+        Browser->>App: POST user/pass 
+        alt user/pass is OK
+            App->>Browser: HTML page
+        else not OK
+            App->>Browser: Login form
+        end
+    end    
+ ```
+### User interacts with page
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant App
+    participant HA
+    App->>Browser: HTML page
+    HA-)App: entity state changes
+    App->>Browser: update page
+    User-)Browser: click in cell
+    Browser->>App: cell is clicked
+    App->>HA: call service for entity
+
+ ```
 </details>
 
 <details>
