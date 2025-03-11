@@ -16,8 +16,26 @@ Nya och modifierade filer samlas ihop i en korg.
 
 
 https://github.com/bjorne/git-pa-svenska
+
 https://gist.github.com/kmpm/21a9ede21c49904c98063cd51c56bad1
 
+<details>
+
+<summary>Demo av mermaid</summary>
+
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+</details>
+
+<details>
+
+<summary>Verkstan och förrådet</summary>
 
 Antag att det finns en verkstad och ett förråd. 
 
@@ -51,7 +69,7 @@ Verkstan kan inte bara beställa fram de filer på en gren som tillsammans utgö
 Med hjälp av beskrivningarna som finns i en grens korgar kan verkstan även hitta och beställa fram tidigare versioner. 
 Om verkstan ändrar i filerna och vill spara dem i förrådet, måste först en ny gren skapas. 
  
-
+</details>
 
 
 
