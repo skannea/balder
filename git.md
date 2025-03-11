@@ -19,13 +19,18 @@ https://github.com/bjorne/git-pa-svenska
 https://gist.github.com/kmpm/21a9ede21c49904c98063cd51c56bad1
 
 
-Det finns en verkstad *work area* och ett förråd *repository*.
-Förrådet är organiserat som ett träd med grenar *branch*.
-På varje gren hänger korgar med filer.
-Från en gren i förrådet kan verkstan beställa fram de nyaste filerna som finns där. *checkout* 
-Grenen blir då den aktuella grenen och filerna kopieras till verkstan. 
-I verkstan ändras och testas filerna. Där kan också filer skapas och tas bort.
-När verkstan anser sig nöjd för tillfället samlas alla förändringar ihop i en korg. *stage*
+Antag att det finns en verkstad och ett förråd. 
+
+Verkstan är där utvecklingsarbete sker genom att samhörande filer testas, skapas, förändras och tas bort.  
+
+I förrådet lagras både nya och gamla filer. Förrådet är organiserat som ett träd med grenar.
+
+På olika ställen på en gren hänger antingen en korg med filer eller så utgår en ny gren därifrån.
+
+Från en gren i förrådet kan verkstan beställa fram de nyaste filerna som finns där. När filerna kopieras till verkstan blir grenen verkstans aktuella gren.
+
+I verkstan testas och förbättras filerna och när verkstan anser sig nöjd för tillfället samlas alla förändringar ihop i en korg.
+
 I korgen bör också läggas en beskrivning av vad som har ändrats.
 Korgen hängs upp i änden på den aktuella grenen, som då växer ut. 
 Verkstan kan fortsätta arbetet till dess man återigen är nöjd och göra en ny korg som hängs in på den aktuella grenen.
