@@ -83,18 +83,18 @@ function showhide( div ) {
 // if there are multiple inputs/selects with data-click=#, their values are concatenated with commas
 function on_user_input(e) {  
   let div =  e.target.parentElement;
-  let obj = { clientid:clientid, device:current_device, op:'user_input', div:div.id, button:'', value:'', values:{} };
+  let obj = { device:current_device, op:'user_input', 'data': { div:div.id, button:'', value:'', values:{}} };
   let elems = div.children;
   for (let i=0; i<elems.length; i++) {
       if (elems[i] == e.target) 
-        obj.button = elems[i].getAttribute('data-click'); //clicked button
+        obj.data.button = elems[i].getAttribute('data-click'); //clicked button
       if (elems[i].hasAttribute('data-value'))  {
-              obj.value = elems[i].value; // element holding a value
-              obj.values[elems[i].getAttribute('data-value')] = obj.value; // key:value is (type of input):value
+              obj.data.value = elems[i].value; // element holding a value
+              obj.data.values[elems[i].getAttribute('data-value')] = obj.data.value; // key:value is (type of input):value
           }  
   }        
-  if ( !obj.button ) return; // clicked element was not a button (marked with data-click) 
-  statusline('button:' + obj.button ); 
+  if ( !obj.data.button ) return; // clicked element was not a button (marked with data-click) 
+  statusline('button:' + obj.data.button ); 
   
   logger( `on_user_input: ${JSON.stringify( obj )} `)
   send( obj );
@@ -147,6 +147,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
