@@ -1,8 +1,7 @@
 /*
-argus.js
+balder.js
 
-start locally: http://192........99:9999?view=<viewtitle>&card=<cardtitle>
-start remote:  https://thisis.mysite.duckdns.org?view=<viewtitle>&card=<cardtitle>
+
 */
 
 // -----------------------------------
@@ -149,6 +148,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
