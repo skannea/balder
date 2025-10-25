@@ -45,8 +45,7 @@ function setup( wsurl ) {
     socket.addEventListener('open', 
       function () {
         logger("Connected to server, sending start");
-        let obj = {}
-        obj.op = 'begin'
+        let obj = { "op":"begin", "data":{} }
         send( obj );
         statusline('connected');
       });
@@ -148,6 +147,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
