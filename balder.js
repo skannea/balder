@@ -9,7 +9,7 @@ start remote:  https://thisis.mysite.duckdns.org?view=<viewtitle>&card=<cardtitl
 //Global constants are set in html file by server on 
 //<script 
 // var url=...
-// var clientid ...
+
 // </script>
 
 
@@ -149,5 +149,6 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
