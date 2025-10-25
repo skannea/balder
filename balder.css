@@ -1,0 +1,56 @@
+      * { 
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 2vh;
+        color: black;
+      }
+
+      p {
+        color: blue;
+    }
+      
+       h1 {
+        font-size: 4vh;
+        color: black;
+      }
+      
+      h2 {
+        font-size: 3vh;
+        color: blue;
+      }
+
+      input {
+        width: 40vh;
+      }
+      
+      input.long {
+        width: 40vh;
+      }
+      
+      input.short {
+        width: 20vh;
+        font-weight: bold;
+      }
+      
+      button {
+        width: 20vh;
+      }
+
+      button.toggle {
+        width: 40vh;
+        color: blue;
+        font-weight: bold;
+        background-color: lightgrey;
+      }
+
+      span {
+        display: inline-block;
+        border: 1px solid black;
+        padding: 0.5vh; 
+        width: 20vh;
+      }
+
+      .logs {
+       overflow-y: scroll;
+       height: 50vh;
+       background-color: palegreen;
+      }
