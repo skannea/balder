@@ -108,7 +108,7 @@ function receive(event) {
   ev = JSON.parse( event.data )
     
     let op = ev.op;
-    //statusline('op='+op); 
+    statusline('op='+op); 
     
  
     logger( 'operation: ' + op )
@@ -138,7 +138,7 @@ function receive(event) {
 // -----------------------------------
 function send(obj) {
   if (socket.readyState === WebSocket.OPEN) {
-    console.log(obj);
+    //console.log(obj);
     str = JSON.stringify(obj)
     logger("Sending json: " + str);
     socket.send(str);
@@ -147,6 +147,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
