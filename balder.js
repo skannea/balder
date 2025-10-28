@@ -86,8 +86,8 @@ function send_button_key_value( section, button, elem ) {
 }
 
 // -----------------------------------
-function send_key( section, elem ) {
-  send({ 'section':section, 'key': elem.parentElement.id } )
+function send_key( section, key ) {
+  send({ 'section':section, 'key': key } )
 }
 
 
@@ -139,6 +139,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
