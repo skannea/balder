@@ -47,8 +47,9 @@ function setup( wsurl ) {
       function () {
         logger("Connected to server, sending start");
         let obj = {}
-        
-        obj.op = 'start'
+
+        obj.section = 'command_items'
+        obj.key = 'begin'
         send( obj );
         statusline('connected');
       });
@@ -138,5 +139,6 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
