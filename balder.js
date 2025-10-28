@@ -1,14 +1,15 @@
 /*
-balder.js
+argus.js
 
-
+start locally: http://192........99:9999?view=<viewtitle>&card=<cardtitle>
+start remote:  https://thisis.mysite.duckdns.org?view=<viewtitle>&card=<cardtitle>
 */
 
 // -----------------------------------
 //Global constants are set in html file by server on 
 //<script 
 // var url=...
-
+// var clientid ...
 // </script>
 
 
@@ -45,7 +46,9 @@ function setup( wsurl ) {
     socket.addEventListener('open', 
       function () {
         logger("Connected to server, sending start");
-        let obj = { "op":"begin", "data":{} }
+        let obj = {}
+        obj.clientid = clientid
+        obj.op = 'start'
         send( obj );
         statusline('connected');
       });
@@ -60,7 +63,7 @@ function setup( wsurl ) {
   
     socket.addEventListener('message', receive);
     
-    document.getElementById('user_input' ).addEventListener( 'click',  on_user_input ); 
+    //document.getElementById('user_input' ).addEventListener( 'click',  on_user_input ); 
 }
 
 // -----------------------------------
@@ -76,25 +79,34 @@ function showhide( div ) {
   elem.style.display = (elem.style.display === 'none') ? 'block' : 'none';
 }
 
- 
+// -----------------------------------
+function send_button_key_value( section, button, elem ) {
+  send({ 'section':section, 'button': button, 'key': elem.parentElement.id, 'value': elem.parentElement.children[1].value } )
+}
+
+// -----------------------------------
+function send_key( section, elem ) {
+  send({ 'section':section, 'key': elem.parentElement.id } )
+}
+
 
 // -----------------------------------
 // event from a div (with id), containing inputs/selects (with data-click=#) and a set of buttons named with data-click=...
 // if there are multiple inputs/selects with data-click=#, their values are concatenated with commas
 function on_user_input(e) {  
   let div =  e.target.parentElement;
-  let obj = { device:current_device, op:'user_input', 'data': { div:div.id, button:'', value:'', values:{}} };
+  let obj = { clientid:clientid, device:current_device, op:'user_input', div:div.id, button:'', value:'', values:{} };
   let elems = div.children;
   for (let i=0; i<elems.length; i++) {
       if (elems[i] == e.target) 
-        obj.data.button = elems[i].getAttribute('data-click'); //clicked button
+        obj.button = elems[i].getAttribute('data-click'); //clicked button
       if (elems[i].hasAttribute('data-value'))  {
-              obj.data.value = elems[i].value; // element holding a value
-              obj.data.values[elems[i].getAttribute('data-value')] = obj.data.value; // key:value is (type of input):value
+              obj.value = elems[i].value; // element holding a value
+              obj.values[elems[i].getAttribute('data-value')] = obj.value; // key:value is (type of input):value
           }  
   }        
-  if ( !obj.data.button ) return; // clicked element was not a button (marked with data-click) 
-  statusline('button:' + obj.data.button ); 
+  if ( !obj.button ) return; // clicked element was not a button (marked with data-click) 
+  statusline('button:' + obj.button ); 
   
   logger( `on_user_input: ${JSON.stringify( obj )} `)
   send( obj );
@@ -108,7 +120,7 @@ function receive(event) {
   ev = JSON.parse( event.data )
     
     let op = ev.op;
-    statusline('op='+op); 
+    //statusline('op='+op); 
     
  
     logger( 'operation: ' + op )
@@ -138,7 +150,6 @@ function receive(event) {
 // -----------------------------------
 function send(obj) {
   if (socket.readyState === WebSocket.OPEN) {
-    //console.log(obj);
     str = JSON.stringify(obj)
     logger("Sending json: " + str);
     socket.send(str);
@@ -147,10 +158,4 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
-
-
-
-
-
-
 
