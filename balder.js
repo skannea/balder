@@ -1,4 +1,4 @@
-/*
+y/*
 argus.js
 
 start locally: http://192........99:9999?view=<viewtitle>&card=<cardtitle>
@@ -50,7 +50,7 @@ function setup( wsurl ) {
 
         obj.section = 'command_items'
         obj.key = 'begin'
-        send( obj );
+        to_server( 'nosection', 'begin' );
         statusline('connected');
       });
   
@@ -81,16 +81,12 @@ function showhide( div ) {
 }
 
 // -----------------------------------
-function send_button_key_value( section, button, elem ) {
-  send({ 'section':section, 'button': button, 'key': elem.parentElement.id, 'value': elem.parentElement.children[1].value } )
+// send_section_item_button_value
+function to_server( section, item, button='', value='' ) {
+  if (button) send({ 'section':section, 'button': button, 'key': item.parentElement.id, 'value': item.parentElement.children[1].value } )
+  else        send({ 'section':section, 'button': item, 'key': item, 'value': '' )
+  
 }
-
-// -----------------------------------
-function send_key( section, key ) {
-  send({ 'section':section, 'key': key } )
-}
-
-
 
 
 
@@ -139,6 +135,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
