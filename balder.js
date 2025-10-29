@@ -83,10 +83,15 @@ function showhide( div ) {
 // -----------------------------------
 // send_section_item_button_value
 function to_server( section, item, button='', value='' ) {
-  if (button) send({ 'section':section, 'button': button, 'key': item.parentElement.id, 'value': item.parentElement.children[1].value } )
-  else        send({ 'section':section, 'button': item, 'key': item, 'value': '' )
-  
-}
+  if (button) send({ 'section':section, 
+                     'button': button, 
+                     'key':    item.parentElement.id, 
+                     'value':  item.parentElement.children[1].value } )
+  else        send({ 'section':section, 
+                     'button': item,  
+                     'key': item,   
+                     'value': '' } )   
+  }
 
 
 
@@ -135,6 +140,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
