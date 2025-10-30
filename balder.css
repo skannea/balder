@@ -53,9 +53,14 @@
         width: 20vh;
       }
 
+      table, th, td {
+           border:1px solid black;
+      }
+
       .logs {
        overflow-y: scroll;
        height: 50vh;
        background-color: palegreen;
 
       }
+
