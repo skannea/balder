@@ -111,12 +111,12 @@ function receive(event) {
     
     else if ( op == 'before' ) { 
         let elem = document.getElementById(ev.data.element)
-        elem.innerHTML =  ev.data.text + elem.innerHTML;
+        elem.innerHTML =  ev.data.html + elem.innerHTML;
     }
     
     else if ( op == 'after' ) { 
         let elem = document.getElementById(ev.data.element)
-        elem.innerHTML +=  ev.data.text ;
+        elem.innerHTML +=  ev.data.html ;
     }
     
     else if ( op == 'reload' ) { 
@@ -138,6 +138,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
