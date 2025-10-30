@@ -35,6 +35,10 @@
         width: 20vh;
       }
 
+      button.long {
+        width: 50vh;
+      }
+
       button.toggle {
         width: 40vh;
         color: blue;
@@ -53,4 +57,5 @@
        overflow-y: scroll;
        height: 50vh;
        background-color: palegreen;
+
       }
