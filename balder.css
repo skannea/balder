@@ -40,10 +40,16 @@
         width: 100vw;
       }
 
-      button.toggle {
-        width: 50vh;
+      button.big {
+        width: 100vw;
         color: blue;
         font-weight: bold;
+        background-color: lightgrey;
+      }
+      button.small {
+        width: 100vw;
+        color: blue;
+        font-size: 1vw;     
         background-color: lightgrey;
       }
 
@@ -68,6 +74,7 @@
        background-color: palegreen;
 
       }
+
 
 
 
