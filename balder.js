@@ -154,8 +154,13 @@ function on_file_select( input ) {
  //           'value':  reader.result} )
 
     logger( file.name + " uploaded bv" );
-    b = new Uint8Array( reader.result, 0, 20  );
-    logger(   new TextDecoder().decode(b)) ;
+    b = new Uint8Array( reader.result, 0, 40  );
+    s =  new TextDecoder().decode(b)
+    logger( s ) ;
+    logger(JSON.stringify( s ))
+    logger(JSON.stringify( b ))
+    
+    
   };
   reader.onerror = () => {
     logger("Error reading the file.");
@@ -164,6 +169,7 @@ function on_file_select( input ) {
   //reader.readAsText(file);
   reader.readAsArrayBuffer(file);
 }
+
 
 
 
