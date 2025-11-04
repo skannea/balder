@@ -153,14 +153,16 @@ function on_file_select( input ) {
             'key':    file.name, 
             'value':  reader.result} )
 
-    logger( reader.name + " uploaded" );
+    logger( file.name + " uploaded" );
   };
   reader.onerror = () => {
     logger("Error reading the file.");
   };
   
-  reader.readAsText(file);
+  //reader.readAsText(file);
+  reader.readAsBinaryString(file);
 }
+
 
 
 
