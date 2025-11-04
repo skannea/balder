@@ -2,6 +2,7 @@
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-size: 2vh;
         color: black;
+        align: left;   
       }
 
       p {
@@ -36,11 +37,11 @@
       }
 
       button.long {
-        width: 50vh;
+        width: 100vw;
       }
 
       button.toggle {
-        width: 40vh;
+        width: 50vh;
         color: blue;
         font-weight: bold;
         background-color: lightgrey;
@@ -67,6 +68,7 @@
        background-color: palegreen;
 
       }
+
 
 
 
