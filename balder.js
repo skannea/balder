@@ -153,9 +153,10 @@ function on_file_select( input ) {
  //           'key':    file.name, 
  //           'value':  reader.result} )
 
-    logger( file.name + " uploaded" );
-    logger( reader.result.slice(0,20)  );
-    logger( reader.result.slice(20,40)  );
+    logger( file.name + " uploaded bu" );
+    logger(Buffer.from(reader.result).toJSON());
+    //logger( reader.result.slice(0,20)  );
+    //logger( reader.result.slice(20,40)  );
   };
   reader.onerror = () => {
     logger("Error reading the file.");
@@ -164,6 +165,7 @@ function on_file_select( input ) {
   //reader.readAsText(file);
   reader.readAsArrayBuffer(file);
 }
+
 
 
 
