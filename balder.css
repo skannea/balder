@@ -2,7 +2,7 @@
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-size: 2vh;
         color: black;
-        align: left;   
+        text-align: left;   
       }
 
       p {
@@ -68,6 +68,7 @@
        background-color: palegreen;
 
       }
+
 
 
 
