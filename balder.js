@@ -143,6 +143,24 @@ function send(obj) {
 
 
 
+function on_file_select( input ) {
+  let file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = () => {
+    logger( reader.result );
+  };
+  reader.onerror = () => {
+    logger("Error reading the file.");
+  };
+  
+  reader.readAsText(file);
+}
+
+
+
+
+
+
 
 
 
