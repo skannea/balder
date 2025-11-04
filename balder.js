@@ -143,11 +143,17 @@ function send(obj) {
 
 
 
+// -----------------------------------
 function on_file_select( input ) {
   let file = input.files[0];
   const reader = new FileReader();
   reader.onload = () => {
-    logger( reader.result );
+     send({ 'section':'server_files', 
+            'button': 'upload', 
+            'key':    file.name, 
+            'value':  reader.result} )
+
+    logger( reader.name + " uploaded" );
   };
   reader.onerror = () => {
     logger("Error reading the file.");
@@ -155,6 +161,7 @@ function on_file_select( input ) {
   
   reader.readAsText(file);
 }
+
 
 
 
