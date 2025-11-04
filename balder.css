@@ -40,18 +40,13 @@
         width: 100vw;
       }
 
-      button.big {
+      button.section {
         width: 100vw;
         color: blue;
         font-weight: bold;
         background-color: lightgrey;
       }
-      button.small {
-        width: 100vw;
-        color: blue;
-        font-size: 1vw;     
-        background-color: lightgrey;
-      }
+     
 
       span {
         display: inline-block;
@@ -74,6 +69,7 @@
        background-color: palegreen;
 
       }
+
 
 
 
