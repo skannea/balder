@@ -148,20 +148,23 @@ function on_file_select( input ) {
   let file = input.files[0];
   const reader = new FileReader();
   reader.onload = () => {
-     send({ 'section':'server_files', 
-            'button': 'upload', 
-            'key':    file.name, 
-            'value':  reader.result} )
+ //    send({ 'section':'server_files', 
+ //           'button': 'upload', 
+ //           'key':    file.name, 
+ //           'value':  reader.result} )
 
     logger( file.name + " uploaded" );
+    logger( reader.result.slice(0,20)  );
+    logger( reader.result.slice(20,40)  );
   };
   reader.onerror = () => {
     logger("Error reading the file.");
   };
   
   //reader.readAsText(file);
-  reader.readAsBinaryString(file);
+  reader.readAsArrayBuffer(file);
 }
+
 
 
 
