@@ -7,8 +7,8 @@ import items
 # importing module
 import sys
 # appending a path
-sys.path.append('External/microdot')
-sys.path.append('External/microdot')
+sys.path.append('../External/microdot')
+
 
 
 from microdot import Microdot
