@@ -35,7 +35,7 @@ function statusline(s) {
 }
 
 // -----------------------------------
-function setup( wsurl ) {
+async function setup( wsurl ) {
     statusline_element = document.getElementById("statusline")
     loggerdiv = document.getElementById("log_items")
     logger( 'setup' )
@@ -68,8 +68,7 @@ function setup( wsurl ) {
     test_element = document.getElementById("test")
     test_element.innerHTML = 'Waiting for device orientation data...';
 
-    DeviceOrientationEvent.requestPermission()
-  .then(response => {
+    const response = await DeviceOrientationEvent.requestPermission();
     if (response === 'granted') {
       test_element.innerHTML = 'Permitted';
       window.addEventListener('deviceorientation', handleOrientation ) 
@@ -79,8 +78,8 @@ function setup( wsurl ) {
         // Handle event data here (e.g., event.acceleration.x)
           test_element.innerHTML = 'Not permitted';
     }
-      });
-}
+    }
+
 function handleOrientation(event) {
   const absolute = event.absolute;
   const alpha = event.alpha;
