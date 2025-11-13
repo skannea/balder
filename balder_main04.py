@@ -3,7 +3,7 @@ import json
 import items
 #import log
 
-#  så att det funkar på PC
+#  så att det fungerar på PC
 # importing module
 import sys
 # appending a path
