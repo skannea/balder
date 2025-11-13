@@ -66,33 +66,21 @@ function setup( wsurl ) {
     
     //document.getElementById('user_input' ).addEventListener( 'click',  on_user_input ); 
     test_element = document.getElementById("test")
-
+    test_element.innerHTML = 'Waiting for device orientation data...';
 
     DeviceOrientationEvent.requestPermission()
   .then(response => {
     if (response === 'granted') {
-      window.addEventListener('deviceorientation', (event) => {
-        // Handle event data here (e.g., event.acceleration.x)
-          const absolute = event.absolute;
-  const alpha = event.alpha;
-  const beta = event.beta;
-  const gamma = event.gamma;
-
-  // Do stuff with the new orientation data
-  test_element.innerHTML =  'absolute: ' + absolute + '<br>' +
-                            'alpha: '   + alpha.toFixed(2)   + '<br>' +
-                            'beta: '  + beta.toFixed(2)  + '<br>' +
-                            'gamma: ' + gamma.toFixed(2) + '<br>' ;
-
-      });
+      test_element.innerHTML = 'Permitted';
+      window.addEventListener('deviceorientation', handleOrientation ) 
     }
-  })
-  .catch(console.error);
+    else {
 
-   
-
+        // Handle event data here (e.g., event.acceleration.x)
+          test_element.innerHTML = 'Not permitted';
+    }
+      });
 }
-
 function handleOrientation(event) {
   const absolute = event.absolute;
   const alpha = event.alpha;
