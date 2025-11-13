@@ -208,14 +208,13 @@ class Com(Base) :
 <head>
   <meta charset="UTF-8">
   <title >Balder</title>
-  <link rel="icon" type="image/x-icon" href="https://skannea.github.io/kodning/balder.svg">
-  <link rel="stylesheet" href="https://skannea.github.io/kodning/balder.css?x=23">
+  <link rel="icon" type="image/x-icon" href="https://skannea.github.io/balder/balder.svg">
+  <link rel="stylesheet" href="https://skannea.github.io/balder/balder.css?x=23">
   
-  <script src="https://skannea.github.io/kodning/balder.js"></script>
+  <script src="https://skannea.github.io/balder/balder.js"></script>
   
-
 </head>
-<body onload="setup( 'ws://lothar.local:5000/ws' );">
+<body onload="setup( 'wss://blue.skannea.duckdns.org:443/ws' );">
    <h1>Balder</h1>
 
    <div id="sections">
