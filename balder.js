@@ -16,6 +16,8 @@ let statusline_element;
 let loggerdiv;
 let current_device = '';
 let statusitems = [];
+
+let test_element ;
   
 // -----------------------------------
 function logger(s) {
@@ -63,6 +65,25 @@ function setup( wsurl ) {
     socket.addEventListener('message', receive);
     
     //document.getElementById('user_input' ).addEventListener( 'click',  on_user_input ); 
+
+    window.addEventListener("deviceorientation", handleOrientation);
+    test_element = document.getElementById("test")
+
+}
+
+function handleOrientation(event) {
+  const absolute = event.absolute;
+  const alpha = event.alpha;
+  const beta = event.beta;
+  const gamma = event.gamma;
+
+  // Do stuff with the new orientation data
+  test_element.innerHTML =  'absolute: ' + absolute + '<br>' +
+                            'alpha: '   + alpha.toFixed(2)   + '<br>' +
+                            'beta: '  + beta.toFixed(2)  + '<br>' +
+                            'gamma: ' + gamma.toFixed(2) + '<br>' ;
+  
+
 }
 
 // -----------------------------------
