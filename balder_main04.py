@@ -211,7 +211,7 @@ class Com(Base) :
   <link rel="icon" type="image/x-icon" href="https://skannea.github.io/balder/balder.svg">
   <link rel="stylesheet" href="https://skannea.github.io/balder/balder.css?x=23">
   
-  <script src="https://skannea.github.io/balder/balder.js?x=23"></script>
+  <script src="https://skannea.github.io/balder/balder.js?x=25"></script>
   
 </head>
 <body onload="setup( 'wss://blue.skannea.duckdns.org:443/ws' );">
@@ -223,7 +223,7 @@ class Com(Base) :
    '<div id="statusline">---</div><button onclick="reload();">Reload</button>'
    )} 
 
-   <div id="test">---....---</div> 
+   <div id="test">---..---</div> 
 
    {self.section_html('server_files', 'Server Files', False, self.select_file_html() )}
     

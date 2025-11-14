@@ -35,7 +35,7 @@ function statusline(s) {
 }
 
 // -----------------------------------
-async function setup( wsurl ) {
+function setup( wsurl ) {
     statusline_element = document.getElementById("statusline")
     loggerdiv = document.getElementById("log_items")
     logger( 'setup' )
