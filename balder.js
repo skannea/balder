@@ -180,15 +180,12 @@ function on_file_select( input ) {
 
 function handleOrientation(event) {
   const absolute = event.absolute;
-  const alpha = event.alpha;
-  const beta = event.beta;
-  const gamma = event.gamma;
+  const alpha = Math.round(event.alpha);
+  const beta = Math.round(event.beta);
+  const gamma = Math.round(event.gamma);
 
   // Do stuff with the new orientation data  
-  test_element.innerHTML =  'absolute: ' + absolute + '<br>' +
-                            'alpha: '   + alpha   + '<br>' +
-                            'beta: '  + beta  + '<br>' +
-                            'gamma: ' + gamma + '<br>' ;
+  test_element.innerHTML =  `alpha: ${alpha}<br>beta: ${beta}<br>gamma: ${gamma}<br>`;
   
 
 }
