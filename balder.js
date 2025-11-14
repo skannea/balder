@@ -201,7 +201,7 @@ function onPermissionClick() {
     DeviceMotionEvent.requestPermission()
       .then((state) => {
         if (state === 'granted') {
-          window.addEventListener('devicemotion', handleOrientation);
+          window.addEventListener('deviceorientation', handleOrientation);
         } else {
           console.error('Request to access the orientation was rejected');
           test_element.innerHTML = 'Not permitted';
@@ -210,7 +210,7 @@ function onPermissionClick() {
       .catch(console.error);
   } else {
     // Handle regular non iOS 13+ devices.
-    window.addEventListener('devicemotion', handleOrientation);
+    window.addEventListener('deviceorientation', handleOrientation);
   }
 }
 
