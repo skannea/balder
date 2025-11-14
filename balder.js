@@ -184,7 +184,7 @@ function handleOrientation(event) {
   const beta = event.beta;
   const gamma = event.gamma;
 
-  // Do stuff with the new orientation data
+  // Do stuff with the new orientation data  
   test_element.innerHTML =  'absolute: ' + absolute + '<br>' +
                             'alpha: '   + alpha.toFixed(2)   + '<br>' +
                             'beta: '  + beta.toFixed(2)  + '<br>' +
