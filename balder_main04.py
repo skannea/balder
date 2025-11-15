@@ -239,7 +239,8 @@ class Com(Base) :
 
    {self.section_html('exe_state_items', 'Exec States')}
 
-   {self.section_html('app_orientation', 'App Orientation')}
+   {self.section_html('app_orientation', 'App Orientation', True, 
+        '<button onclick = "onPermissionClick()">Allow device orientation</button>')}
 
    {self.section_html('app_config_items', 'App Configuration')}
    
@@ -441,6 +442,7 @@ class Exec(Base):
         #    await self.send_replace( 'state_items', self.state_items.html( 'state_items'))
         #self.command_items.set_name_async('xupdstates', 'Update states', update_states )
 
+    
         def f(): self.fallback = False
         self.command_items.set_name_func('fb0', 'Normal mode', f )    
             
@@ -464,6 +466,10 @@ class Exec(Base):
             
         def f(): self.failure.set()
         self.command_items.set_name_func('fail1', '(Fail set)', f )    
+     
+        async def af():
+            await self.send( { 'op':'permit'})
+        self.command_items.set_name_async('permit', 'Give permission', af )
 
 
 com = Com()
