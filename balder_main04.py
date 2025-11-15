@@ -124,11 +124,11 @@ class Base() :
         return ''
 
 # ----------------------------------------------------------------------
-    async def send( self, op, data ): 
+    async def send( self, op, data={} ): 
         if Base.ws :
-            print('send')
+            #print('send')
             await self.ws.send( json.dumps({ 'op':op, 'data':data }) )
-            print('after send')
+            #print('after send')
 
 # ----------------------------------------------------------------------
     async def receive( self, ws ): 
@@ -381,11 +381,6 @@ class Exec(Base):
 # ----------------------------------------------------------------------
     def __init__( self ): 
         
-        self.orientation_changes = 0
-        self.alpha = 0
-        self.beta = 0
-        self.gamma = 0
-
   
         #self.config_items = ConfigItems()
         #self.config_items_setup()        
@@ -399,7 +394,8 @@ class Exec(Base):
         self.resume   = asyncio.Event()   # event variable that is set to resume app exeution
         self.fallback = False
         self.auto = False
-        self.app = None
+        
+        self.app = App()
 
 
 # ----------------------------------------------------------------------
@@ -408,19 +404,6 @@ class Exec(Base):
         # { section:command_items, key:commandkey  }
         if section == 'exe_command_items' : 
             await self.command_items.run(  msg )
-            return
-        # { section:'orientation', alpha:int, beta:int, gamma:int  }
-        if section == 'app_orientation' : 
-            self.orientation_changes += 1
-            self.alpha = msg.get('alpha',0)
-            self.beta  = msg.get('beta',0)
-            self.gamma = msg.get('gamma',0) 
-            html = f'''Riktning: {self.alpha} grader<br>
-                       Lutning: {self.beta} grader<br>
-                       Rotation: {self.gamma} grader<br>
-                       Antal: {self.orientation_changes}'''
-    
-            await self.send_replace( 'app_orientation', html)
             return
                     
          # { section:config_items, key:itemid, button:clickedbutton, value:value} 
@@ -468,9 +451,85 @@ class Exec(Base):
         self.command_items.set_name_func('fail1', '(Fail set)', f )    
      
         async def af():
-            await self.send( { 'op':'permit'})
-        self.command_items.set_name_async('permit', 'Give permission', af )
+            await self.send( 'permit', {}  )
+        self.command_items.set_name_async('permit', 'funkar inte Give permission', af )
 
+# ----------------------------------------------------------------------------------------------    
+class App(Base):
+
+# ----------------------------------------------------------------------
+    def __init__( self ): 
+        
+        self.orientation_changes = 0
+        self.alpha = 0
+        self.beta = 0
+        self.gamma = 0
+        self.stop = False
+  
+        #self.config_items = ConfigItems()
+        #self.config_items_setup()        
+        self.command_items = CommandItems()
+        self.command_items_setup()  
+        
+        #self.state_items = StateItems()
+        #self.state_items_setup()
+
+        
+
+# ----------------------------------------------------------------------
+    async def handle_message( self, msg ): 
+        section = msg['section']
+        # { section:command_items, key:commandkey  }
+        if section == 'app_command_items' : 
+            await self.command_items.run(  msg )
+            return
+        # { section:'orientation', alpha:int, beta:int, gamma:int  }
+        if section == 'app_orientation' : 
+            if self.stop :
+                return
+            self.orientation_changes += 1
+            self.alpha = msg.get('alpha',0)
+            self.beta  = msg.get('beta',0)
+            self.gamma = msg.get('gamma',0) 
+            html = f'''Riktning: {self.alpha} grader<br>
+                       Lutning: {self.beta} grader<br>
+                       Rotation: {self.gamma} grader<br>
+                       Antal: {self.orientation_changes}'''
+    
+            await self.send_replace( 'app_orientation', html)
+            return
+                    
+        elif section ==  'app_config_items' :
+            self.config_items.action( msg )
+            return
+        elif msg.get('key','') == 'begin': # browser has started, awaits sections content
+            
+            #await self.send_replace( 'app_config_items', self.config_items.html() )
+            await self.send_replace( 'app_command_items', self.command_items.html('app_command_items') )
+            #await self.send_replace( 'app_state_items', self.state_items.html() )
+                
+# ----------------------------------------------------------------------
+    def command_items_setup( self  ): 
+        
+        #async def update_states():
+        #    await self.send_replace( 'state_items', self.state_items.html( 'state_items'))
+        #self.command_items.set_name_async('xupdstates', 'Update states', update_states )
+
+    
+        def f(): self.stop = True
+        self.command_items.set_name_func('servstop', 'Stop in server', f )    
+            
+        def f(): self.stop = False
+        self.command_items.set_name_func('servgo', 'Go in server', f )    
+
+        async def af(): await self.send('appstop')
+        self.command_items.set_name_async('appstop', 'Stop', af )    
+            
+        async def af(): await self.send('appgo')
+        self.command_items.set_name_async('appgo', 'Go', af )    
+            
+       
+        
 
 com = Com()
 

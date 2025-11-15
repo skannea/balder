@@ -131,6 +131,12 @@ function receive(event) {
     location.reload();
     
 }
+    else if ( op == 'appstop' ) { 
+    device_orientation.stop = true;
+}
+    else if ( op == 'appgo' ) { 
+    device_orientation.stop = false;
+}
 }
 
 // -----------------------------------
@@ -177,10 +183,12 @@ function on_file_select( input ) {
 }
 
 
-let device_orientation = { alpha:0, beta:0, gamma:0 };
+let device_orientation = { alpha:0, beta:0, gamma:0, stop:false };
+
 
 // -----------------------------------
 function handleOrientation(event) {
+  if (device_orientation.stop) return;
   const alpha = Math.round(event.alpha);
   const beta = Math.round(event.beta);
   const gamma = Math.round(event.gamma);
