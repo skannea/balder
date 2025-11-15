@@ -384,8 +384,13 @@ class Exec(Base):
         #self.config_items_setup()        
         self.command_items = CommandItems()
         self.command_items_setup()  
-        #self.state_items = StateItems()
-        #self.state_items_setup()
+        
+        self.state_items = StateItems()
+        self.state_items_setup()
+
+        self.alpha = 0
+        self.beta = 0
+        self.gamma = 0
 
         self.failure  = asyncio.Event()   # event variable that is set when an app error occurs
         self.resume   = asyncio.Event()   # event variable that is set to resume app exeution
@@ -394,10 +399,21 @@ class Exec(Base):
         self.app = None
 
 # ----------------------------------------------------------------------
+    def state_items_setup( self ): 
+ 
+        self.state_items.set_name_func( 'alpha', 'Riktning', lambda : f'{self.alpha} grader' )
+        self.state_items.set_name_func( 'beta', 'Lutning', lambda : f'{self.beta} grader' )
+        self.state_items.set_name_func( 'gamma', 'Rotation', lambda : f'{self.gamma} grader' )
+
+# ----------------------------------------------------------------------
     async def handle_message( self, msg ): 
         section = msg['section']
         # { section:command_items, key:commandkey  }
         if section == 'exe_command_items' : 
+            await self.command_items.run(  msg )
+            return
+        # { section:'orientation', alpha:int, beta:int, gamma:int  }
+        if section == 'orientation' : 
             await self.command_items.run(  msg )
             return
                     

@@ -177,16 +177,28 @@ function on_file_select( input ) {
 }
 
 
+let device_orientation = { alpha:0, beta:0, gamma:0 };
 
 function handleOrientation(event) {
-  const absolute = event.absolute;
   const alpha = Math.round(event.alpha);
   const beta = Math.round(event.beta);
   const gamma = Math.round(event.gamma);
 
   // Do stuff with the new orientation data  
   test_element.innerHTML =  `alpha: ${alpha}<br>beta: ${beta}<br>gamma: ${gamma}<br>`;
-  
+  if ( device_orientation.alpha != alpha ||
+       device_orientation.beta  != beta  ||
+       device_orientation.gamma != gamma ) {  
+        
+    device_orientation.alpha = alpha;
+    device_orientation.beta = beta;
+    device_orientation.gamma = gamma;
+  send({ 'section':'orientation', 
+         'alpha': alpha,
+         'beta':  beta,
+         'gamma': gamma } )  
+ 
+  }  
 
 }
 
