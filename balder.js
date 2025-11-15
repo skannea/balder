@@ -186,7 +186,7 @@ function handleOrientation(event) {
   const gamma = Math.round(event.gamma);
 
   // Do stuff with the new orientation data  
-  test_element.innerHTML =  `alpha: ${alpha}<br>beta: ${beta}<br>gamma: ${gamma}<br>`;
+  
   if ( device_orientation.alpha != alpha ||
        device_orientation.beta  != beta  ||
        device_orientation.gamma != gamma ) {  
