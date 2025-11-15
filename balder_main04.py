@@ -223,8 +223,6 @@ class Com(Base) :
    '<div id="statusline">---</div><button onclick="reload();">Reload</button>'
    )} 
 
-   <div id="test">---..---</div> 
-
    {self.section_html('server_files', 'Server Files', False, self.select_file_html() )}
     
    {self.section_html('device_files', 'Device Files')}
@@ -240,6 +238,8 @@ class Com(Base) :
    {self.section_html('exe_command_items', 'Exec Commands')}
 
    {self.section_html('exe_state_items', 'Exec States')}
+
+   {self.section_html('app_orientation', 'App Orientation')}
 
    {self.section_html('app_config_items', 'App Configuration')}
    
@@ -380,17 +380,19 @@ class Exec(Base):
 # ----------------------------------------------------------------------
     def __init__( self ): 
         
+        self.orientation_changes = 0
+        self.alpha = 0
+        self.beta = 0
+        self.gamma = 0
+
+  
         #self.config_items = ConfigItems()
         #self.config_items_setup()        
         self.command_items = CommandItems()
         self.command_items_setup()  
         
-        self.state_items = StateItems()
-        self.state_items_setup()
-
-        self.alpha = 0
-        self.beta = 0
-        self.gamma = 0
+        #self.state_items = StateItems()
+        #self.state_items_setup()
 
         self.failure  = asyncio.Event()   # event variable that is set when an app error occurs
         self.resume   = asyncio.Event()   # event variable that is set to resume app exeution
@@ -398,12 +400,6 @@ class Exec(Base):
         self.auto = False
         self.app = None
 
-# ----------------------------------------------------------------------
-    def state_items_setup( self ): 
- 
-        self.state_items.set_name_func( 'alpha', 'Riktning', lambda : f'{self.alpha} grader' )
-        self.state_items.set_name_func( 'beta', 'Lutning', lambda : f'{self.beta} grader' )
-        self.state_items.set_name_func( 'gamma', 'Rotation', lambda : f'{self.gamma} grader' )
 
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ): 
@@ -413,8 +409,17 @@ class Exec(Base):
             await self.command_items.run(  msg )
             return
         # { section:'orientation', alpha:int, beta:int, gamma:int  }
-        if section == 'orientation' : 
-            await self.command_items.run(  msg )
+        if section == 'app_orientation' : 
+            self.orientation_changes += 1
+            self.alpha = msg.get('alpha',0)
+            self.beta  = msg.get('beta',0)
+            self.gamma = msg.get('gamma',0) 
+            html = f'''Riktning: {self.alpha} grader<br>
+                       Lutning: {self.beta} grader<br>
+                       Rotation: {self.gamma} grader<br>
+                       Antal: {self.orientation_changes}'''
+    
+            await self.send_replace( 'app_orientation', html)
             return
                     
          # { section:config_items, key:itemid, button:clickedbutton, value:value} 
@@ -432,6 +437,10 @@ class Exec(Base):
 # ----------------------------------------------------------------------
     def command_items_setup( self  ): 
         
+        #async def update_states():
+        #    await self.send_replace( 'state_items', self.state_items.html( 'state_items'))
+        #self.command_items.set_name_async('xupdstates', 'Update states', update_states )
+
         def f(): self.fallback = False
         self.command_items.set_name_func('fb0', 'Normal mode', f )    
             

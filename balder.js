@@ -65,8 +65,8 @@ function setup( wsurl ) {
     socket.addEventListener('message', receive);
     
     //document.getElementById('user_input' ).addEventListener( 'click',  on_user_input ); 
-    test_element = document.getElementById("test")
-    test_element.innerHTML = '<button onclick = "onPermissionClick()">Allow device orientation</button>';
+    //test_element = document.getElementById("test")
+    //test_element.innerHTML = '<button onclick = "onPermissionClick()">Allow device orientation</button>';
 
        }
 
@@ -179,6 +179,7 @@ function on_file_select( input ) {
 
 let device_orientation = { alpha:0, beta:0, gamma:0 };
 
+// -----------------------------------
 function handleOrientation(event) {
   const alpha = Math.round(event.alpha);
   const beta = Math.round(event.beta);
@@ -193,7 +194,7 @@ function handleOrientation(event) {
     device_orientation.alpha = alpha;
     device_orientation.beta = beta;
     device_orientation.gamma = gamma;
-  send({ 'section':'orientation', 
+  send({ 'section':'app_orientation', 
          'alpha': alpha,
          'beta':  beta,
          'gamma': gamma } )  
@@ -204,6 +205,7 @@ function handleOrientation(event) {
 
 
 
+// -----------------------------------
 function onPermissionClick() {
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
     // Handle iOS 13+ devices.
