@@ -1,3 +1,4 @@
+import asyncio
 import json
 import balder_items
 
@@ -76,7 +77,7 @@ class Base() :
 # ----------------------------------------------------------------------
     async def send( self, op, data={} ): 
         if Base.ws :
-            await self.ws.send( json.dumps({ 'op':op, 'data':data }) )
+            await self.ws.send( json.dumps({ 'op':op, 'data':data, 'name':self.name }) )
             
 # ----------------------------------------------------------------------
     async def send_replace( self, elem, code ): 
@@ -99,5 +100,15 @@ class Base() :
     async def handle_message( self, msg ): 
         pass
 
+# ----------------------------------------------------------------------
+    async def task( self, pause = 5 ): 
+        '''dummy task to be overridden'''
+        while True:
+            await asyncio.sleep(pause)
+            print( f'{self.name} heartbeat')
+
+# ----------------------------------------------------------------------
+    def start_tasks( self  ): 
+        asyncio.create_task( self.task() )
 
 
