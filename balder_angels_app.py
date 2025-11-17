@@ -1,3 +1,4 @@
+import asyncio
 from balder_base import Base
 
 # ----------------------------------------------------------------------------------------------    
@@ -6,6 +7,7 @@ class App(Base):
 
 # ----------------------------------------------------------------------
     def init( self ): 
+
         self.orientation_changes = 0
         self.alpha = 0
         self.beta = 0
@@ -14,7 +16,9 @@ class App(Base):
         self.speed = 123
         self.array = [1,2,3,4,5]
         self.state = 'running'
-
+        self.reports = 0
+        asyncio.create_task( self.report_task() )
+        
  
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ): 
@@ -71,12 +75,23 @@ class App(Base):
 # ----------------------------------------------------------------------
     def state_items_setup( self ): 
  
+        self.state_items.set_name_func( 'reports', 'Rapporter', lambda : f'{self.reports} ' )
+        self.state_items.set_name_func( 'alpha', 'Lutning', lambda : f'{self.alpha} grader' )
+        self.state_items.set_name_func( 'beta', 'Riktning', lambda : f'{self.beta} grader' )
+        self.state_items.set_name_func( 'gamma', 'Rotation', lambda : f'{self.gamma} grader' )
+        self.state_items.set_name_func( 'changes', 'Antal ändringar', lambda : f'{self.orientation_changes}' )
+        
         self.state_items.set_name_func( 'simple', 'Simple integer', lambda : f'{self.speed} km/h' )
         self.state_items.set_name_func( 'array', 'List of numbers', lambda : f'{self.array}' )
         self.state_items.set_name_func( 'state', 'Current state', lambda : self.state )
 
 # ----------------------------------------------------------------------
     def permit_html( self ): 
-        return f'''{self.section_html('angels', 'Angels app', True, 
+        return f'''{self.section_html('app_orientation', 'Angels app', True, 
         '<button onclick = "onPermissionClick()">Allow device orientation</button>')}'''
 
+    async def report_task(self, pause=5):
+        while True:
+            await asyncio.sleep(pause)
+            self.reports += 1
+            await self.send_replace( f'{self.name}_state_items', self.state_items.html( f'{self.name}_state_items'))

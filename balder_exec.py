@@ -9,6 +9,8 @@ class Exec(Base):
 
 # ----------------------------------------------------------------------
     def init( self ): 
+        #asyncio.create_task( self.report_task() )
+        
         self.failure  = asyncio.Event()   # event variable that is set when an app error occurs
         self.resume   = asyncio.Event()   # event variable that is set to resume app exeution
         self.fallback = False
@@ -30,7 +32,7 @@ class Exec(Base):
             return
         elif msg.get('key','') == 'begin': # browser has started, awaits sections content
             await self.standard_sections_update()
-            
+
             
        # if not yet returned, forward to app  ----->
         if self.app: 

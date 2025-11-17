@@ -14,10 +14,11 @@ from microdot.websocket import with_websocket
 # app - App - dynamicly selected app, setup and functions
 # ---  Base - base class for Com Exec App
 
-from balder_com import Com
+from balder_com  import Com
 
 dot = Microdot()
-com = Com('com')
+com = None # will be set in main()
+
 
 # ----------------------------------------------------------------------
 @dot.get('/page')
@@ -32,9 +33,11 @@ async def on_ws(request, ws):
 
 # ----------------------------------------------------------------------
 async def main():
+    global com
+    # setup and start tasks for page and websockets
+    com = Com('com')
     # start the server in a background task
     await asyncio.create_task( dot.start_server( debug=True) )
-
 
 # ----------------------------------------------------------------------
 asyncio.run(main())

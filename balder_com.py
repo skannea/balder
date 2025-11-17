@@ -1,3 +1,4 @@
+import asyncio
 from balder_base import Base
 from balder_exec import Exec
 
@@ -6,10 +7,11 @@ class Com(Base) :
     
 # ----------------------------------------------------------------------
     def init( self ): 
+        asyncio.create_task( self.task(3) )
         
         self.exec = Exec('exec')
         self.log_items = []
-
+    
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ):
         section = msg['section'] 
@@ -157,6 +159,11 @@ class Com(Base) :
     async def log_items_send( self ): 
         await self.send( "before", {"element":"log_table", 'html': self.log_items_html() }) 
  
+# ----------------------------------------------------------------------
+    def xxstart_tasks( self  ): 
+        asyncio.create_task( self.task(3) )
+        asyncio.create_task( self.exec.task(4) )
+
 
 
 
