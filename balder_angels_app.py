@@ -1,0 +1,82 @@
+from balder_base import Base
+
+# ----------------------------------------------------------------------------------------------    
+# ----------------------------------------------------------------------------------------------    
+class App(Base):
+
+# ----------------------------------------------------------------------
+    def init( self ): 
+        self.orientation_changes = 0
+        self.alpha = 0
+        self.beta = 0
+        self.gamma = 0
+        self.stop = False
+        self.speed = 123
+        self.array = [1,2,3,4,5]
+        self.state = 'running'
+
+ 
+# ----------------------------------------------------------------------
+    async def handle_message( self, msg ): 
+        section = msg['section']
+        # { section:command_items, key:commandkey  }
+        if section == f'{self.name}_command_items' : 
+            await self.command_items.run(  msg )
+            return
+        elif section ==  f'{self.name}_config_items' :
+            self.config_items.action( msg )
+            return
+        # { section:'orientation', alpha:int, beta:int, gamma:int  }
+        if section == f'{self.name}_orientation' : 
+            self.orientation_changes += 1
+            if self.stop :
+                return
+            self.alpha = msg.get('alpha',0)
+            self.beta  = msg.get('beta',0)
+            self.gamma = msg.get('gamma',0) 
+            html = f'''Riktning: {self.alpha} grader<br>
+                       Lutning: {self.beta} grader<br>
+                       Rotation: {self.gamma} grader<br>
+                       Antal: {self.orientation_changes}'''
+    
+            await self.send_replace( f'{self.name}_orientation', html)
+            return
+                    
+        elif msg.get('key','') == 'begin': # browser has started, awaits sections content
+            
+            await self.send_replace( 'app_section', self.standard_sections_html() + self.permit_html() )
+            await self.standard_sections_update()
+        
+            
+                
+# ----------------------------------------------------------------------
+    def command_items_setup( self  ): 
+        
+        def f(): self.stop = True
+        self.command_items.set_name_func('servstop', 'Stop in server', f )    
+            
+        def f(): self.stop = False
+        self.command_items.set_name_func('servgo', 'Go in server', f )    
+
+        async def af(): await self.send('appstop')
+        self.command_items.set_name_async('appstop', 'Stop', af )    
+            
+        async def af(): await self.send('appgo')
+        self.command_items.set_name_async('appgo', 'Go', af )    
+
+        async def update_states():
+            await self.send_replace( f'{self.name}_state_items', self.state_items.html( f'{self.name}_state_items'))
+        self.command_items.set_name_async('updstates', 'Update states', update_states )
+
+# ----------------------------------------------------------------------
+    def state_items_setup( self ): 
+ 
+        self.state_items.set_name_func( 'simple', 'Simple integer', lambda : f'{self.speed} km/h' )
+        self.state_items.set_name_func( 'array', 'List of numbers', lambda : f'{self.array}' )
+        self.state_items.set_name_func( 'state', 'Current state', lambda : self.state )
+
+# ----------------------------------------------------------------------
+    def permit_html( self ): 
+        return f'''{self.section_html('angels', 'Angels app', True, 
+        '<button onclick = "onPermissionClick()">Allow device orientation</button>')}'''
+
