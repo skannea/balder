@@ -46,11 +46,8 @@ function setup( wsurl ) {
     socket.addEventListener('open', 
       function () {
         logger("Connected to server, sending start");
-        let obj = {}
-
-        obj.section = 'command_items'
-        obj.key = 'begin'
-        to_server( 'nosection', 'begin' );
+        send({ 'section':'begin' } );
+        send({ 'section':'files', 'filelist': filelist } );
         statusline('connected');
       });
   
@@ -84,18 +81,22 @@ function showhide( div ) {
   elem.style.display = (elem.style.display === 'none') ? 'block' : 'none';
 }
 
+
 // -----------------------------------
-// send_section_item_button_value
-function to_server( section, item, button='', value='' ) {
-  if (button) send({ 'section':section, 
-                     'button': button, 
-                     'key':    item.parentElement.id, 
-                     'value':  item.parentElement.children[1].value } )
-  else        send({ 'section':section, 
-                     'button': item,  
-                     'key': item,   
-                     'value': '' } )   
+function on_config_click( section, elem, button ) {
+  send({ 'section':section, 
+         'button': button, 
+         'key':    elem.parentElement.id, 
+         'value':  elem.parentElement.children[1].value } )
   }
+
+// -----------------------------------
+function on_command_click( section, key ) {
+  send({ 'section':section, 
+         'key': key, 
+       })
+  }
+
 
 
 
@@ -150,6 +151,7 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
+
 
 
 
