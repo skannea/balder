@@ -110,9 +110,14 @@ async function on_file_click( file ) {
     }
 
     const result = await response.text();
-    console.log(result);
+    send({ 'section':'file',
+           'file':   file, 
+           'button':    'upload', 
+           'content':  result} )
+
+    logger( file + " uploaded. size:" + result.length  );
   } catch (error) {
-    console.error(error.message);
+    logger(error.message);
   }
   }
 
