@@ -109,10 +109,11 @@ async function on_file_click( file ) {
       throw new Error(`Response status: ${response.status}`);
     }
 
-    const result = await response.blob();
+    const result = await response.bytes().toBase64();
     send({ 'section':'file',
            'file':   file, 
-           'button':    'upload', 
+           'button':    'upload',
+           'tag':    '1', 
            'content':  btoa(result)} )
 
     logger( file + " uploaded. size:" + result.size  );
