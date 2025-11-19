@@ -99,6 +99,25 @@ function on_command_click( section, key ) {
 
 
 
+// -----------------------------------
+async function on_file_click( file ) {
+  logger( 'on_file: '+ file ); 
+  const url = "https://skannea.github.io/balder/"+file;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const result = await response.text();
+    console.log(result);
+  } catch (error) {
+    console.error(error.message);
+  }
+  }
+
+
+
 
 // -----------------------------------
 function receive(event) {
