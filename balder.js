@@ -109,7 +109,7 @@ async function on_file_click( file ) {
       throw new Error(`Response status: ${response.status}`);
     }
 
-    const result = await response.bytes().toBase64();
+    const result =  await response.arrayBuffer() ;
     send({ 'section':'file',
            'file':   file, 
            'button':    'upload',
