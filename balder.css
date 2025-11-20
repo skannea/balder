@@ -44,14 +44,14 @@
         width: 100vw;
         color: blue;
         font-weight: bold;
-        background-color: palegoldenrod;
+        background-color: rgb(146, 236, 229);
       }
      
       button.section {
         width: 100vw;
         color: blue;
         font-weight: normal;
-        background-color: white;
+        background-color: palegoldenrod;
       }
      
 
