@@ -77,10 +77,10 @@ class Com(Base) :
 
    {self.section_html('files', 'Files')}
     
-   {self.section_html('com_section', '----- Communication --------', False, self.standard_sections_html()) }
-   {self.section_html('exe_section', '----- Execution ------------', False, self.exec.standard_sections_html()) }
+   {self.supersection_html('com_section', '----- Communication --------', False, self.standard_sections_html()) }
+   {self.supersection_html('exe_section', '----- Execution ------------', False, self.exec.standard_sections_html()) }
    
-   {self.section_html('app_section', '----- Application ----------', False) }
+   {self.supersection_html('app_section', '----- Application ----------', False) }
 
    {self.section_html('log_items', 'Log', True, '<div class="logs"><table id="log_table"></table></div>')}
 

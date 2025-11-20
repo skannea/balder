@@ -40,11 +40,18 @@
         width: 100vw;
       }
 
-      button.section {
+      button.supersection {
         width: 100vw;
         color: blue;
         font-weight: bold;
         background-color: palegoldenrod;
+      }
+     
+      button.section {
+        width: 100vw;
+        color: black;
+        font-weight: normal;
+        background-color: white;
       }
      
 

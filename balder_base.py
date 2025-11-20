@@ -54,6 +54,21 @@ class Base() :
         </div>'''
 
 # ----------------------------------------------------------------------
+    def supersection_html(self, id, text, show=False, content=''):       
+        """
+        Generates  HTML for toggling (hide/show) section div. 
+        - section id 
+        - button text
+        - show: if True, section is shown initially
+        - content: HTML content of section
+        """
+        return f'''<button class="supersection" onclick="showhide('{id}')">{text}</button><br>
+        <div id="{id}" style="display:{ 'block' if show else 'none'}">
+        {content}
+        </div>'''
+
+
+# ----------------------------------------------------------------------
     def standard_sections_html( self ): 
         ''' return HTML code for all three sections: config, command, state '''
         config_items = f'{self.name}_config_items'
