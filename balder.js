@@ -4,7 +4,7 @@ balder.js
 */
 
 // -----------------------------------
-//Global constants are set in html file by server on 
+//Global constants are set in html file by server on  
 //<script 
 // var url=...
 // 
