@@ -9,7 +9,6 @@ class Exec(Base):
 
 # ----------------------------------------------------------------------
     def init( self ): 
-        #asyncio.create_task( self.report_task() )
         
         self.failure  = asyncio.Event()   # event variable that is set when an app error occurs
         self.resume   = asyncio.Event()   # event variable that is set to resume app exeution
@@ -20,20 +19,16 @@ class Exec(Base):
 
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ): 
-        section = msg['section']
-        # { section:command_items, key:commandkey  }
-        if section == f'{self.name}_command_items' : 
-            await self.command_items.run(  msg )
+        if await self.handle_command_message( msg ):
             return
-                    
-         # { section:config_items, key:itemid, button:clickedbutton, value:value} 
-        elif section ==  f'{self.name}_config_items' :
-            self.config_items.action( msg )
+        if await self.handle_config_message( msg ):
             return
-        elif msg.get('key','') == 'begin': # browser has started, awaits sections content
+        
+        section = msg.get('section','')
+        if section == 'begin': # browser has started, awaits sections content
             await self.standard_sections_update()
-
-            
+            # not return 
+        
        # if not yet returned, forward to app  ----->
         if self.app: 
             await self.app.handle_message( msg ) 

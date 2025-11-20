@@ -1,4 +1,6 @@
 import asyncio
+import base64
+
 from balder_base import Base
 from balder_exec import Exec
 
@@ -11,29 +13,38 @@ class Com(Base) :
         
         self.exec = Exec('exec')
         self.log_items = []
+        
     
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ):
-        section = msg['section'] 
 
-        if section == 'server_files' : 
-            print( f'Filename: {msg['key']}   Size: { len(msg['value'])} bytes' )
+        if await self.handle_command_message( msg ):
+            return
+        if await self.handle_config_message( msg ):
+            return
+        
+        section = msg.get('section','')
+        if section == 'files': # file list update
+            filelist = msg.get('filelist',[])
+            print ('Received file list:', filelist) 
+            await self.send_replace( 'files', self.file_select_html( filelist ) )
             return
 
-
-        # { section:command_items, key:commandkey  }
-
-        if section == f'{self.name}_command_items' : 
-            await self.command_items.run( msg )
+        if section == 'file': # file upload
+            file = msg.get('file',[])
+            content = (base64.b64decode(msg.get('content','')))
+            print ('Received file:', file) 
+            print ('Received bytes:', len(content)) 
+            with open( 'y'+file, 'wb') as f:
+                f.write( content ) 
             return
-                    
-         # { section:config_items, key:itemid, button:clickedbutton, value:value} 
-        elif section ==  f'{self.name}_config_items' :
-            self.config_items.action(  msg )
-            return
-        elif msg.get('key','') == 'begin': # browser has started, awaits sections content
+# note ubinascii.a2b_base64(data)
+
+
+        if section == 'begin': # browser has started, awaits sections content
             await self.standard_sections_update()
-            
+            # not return 
+        
         # if not yet returned, forward to exec  ----->
         await self.exec.handle_message( msg ) 
             
@@ -48,13 +59,14 @@ class Com(Base) :
 <head>
   <meta charset="UTF-8">
   <title >Balder</title>
-  <link rel="icon" type="image/x-icon" href="https://skannea.github.io/balder/balder.svg">
-  <link rel="stylesheet" href="https://skannea.github.io/balder/balder.css?x=23">
+  <link rel="icon" type="image/x-icon" href="{self.config_items.value('resourceurl')}/balder.svg">
+  <link rel="stylesheet" href="{self.config_items.value('resourceurl')}/balder.css?x=3">
   
-  <script src="https://skannea.github.io/balder/balder.js?x=25"></script>
+  <script src="{self.config_items.value('resourceurl')}/balder_list.js"></script>
+  <script src="{self.config_items.value('resourceurl')}/balder.js?x=29"></script>
   
 </head>
-<body onload="setup( 'wss://blue.skannea.duckdns.org:443/ws' );">
+<body onload="setup( '{self.config_items.value('wsurl')}' );">
    <h1>Balder</h1>
 
    <div id="sections">
@@ -63,10 +75,8 @@ class Com(Base) :
    '<div id="statusline">---</div><button onclick="reload();">Reload</button>'
    )} 
 
-   {self.section_html('server_files', 'Server Files', False, self.select_file_html() )}
+   {self.section_html('files', 'Files')}
     
-   {self.section_html('device_files', 'Device Files')}
-
    {self.section_html('com_section', '----- Communication --------', False, self.standard_sections_html()) }
    {self.section_html('exe_section', '----- Execution ------------', False, self.exec.standard_sections_html()) }
    
@@ -80,19 +90,50 @@ class Com(Base) :
 </html>
 '''
 
+# ----------------------------------------------------------------------
+    def file_select_html(self, filelist ) : # [ {file:x.py, desc:blabla}, ... ]
+        code = ''
+        for f in filelist:
+            file = f['file']
+            desc = f['desc']
+            code += f'''
+              <div>
+                <input class="short" disabled value="{file}"/>
+                <input class="long"  disabled value="{desc}" />
+                <button onclick="on_file_click( '{file}' )">Upload</button>
+              </div>'''
+        return code
+
+   
+# ----------------------------------------------------------------------
+    def html(self, id ):
+        code = ''
+        for key in self.iter():
+            code += f'''
+              <div id="{key}">
+                <input class="short" disabled value="{self.name(key)}"/>
+                <input class="long" type="text" value="{self.value(key)}" />
+                <button onclick="to_server( '{id}', this, 'save'   )">Save</button>
+                <button onclick="to_server( '{id}', this, 'remove' )">Remove</button>
+              </div>'''
+        return code
+
+
 
 # ----------------------------------------------------------------------
-    def select_file_html(self):       
+    def xselect_file_html(self):       
         return f'''<input type="file" onchange="on_file_select(this)">'''
+    
+
 # ----------------------------------------------------------------------
     def config_items_setup( self ): 
         # read from file
         self.config_items.set_name_value('name',   'Namn', 'Balder')
         self.config_items.set_name_value('ssid',   'WiFi', 'Monarki') 
         self.config_items.set_name_value('connect_retries', 'Retries', '5') 
-        self.config_items.set_name_value('serverproto', 'http/s', 'http')
-        self.config_items.set_name_value('serverhost', 'Host', 'lothar.local')
-
+        self.config_items.set_name_value('resourceurl', 'Resource URL', 'https://skannea.github.io/balder')
+        self.config_items.set_name_value('pageurl', 'Page URL',  'https://vicker.tplinkdns.com:443/balder/page')
+        self.config_items.set_name_value('wsurl', 'WebSocket URL', 'https://vicker.tplinkdns.com:443/balder/ws')
         self.secrets = { 'Monarki': '' } # wifi credentials
 
 # ----------------------------------------------------------------------

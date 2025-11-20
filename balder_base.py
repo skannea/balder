@@ -8,6 +8,7 @@ import balder_items
 class Base() :
     
     ws = None # Base.ws
+    wslist = [] 
 
 # ----------------------------------------------------------------------
 # not to be overridden, use init instead
@@ -76,8 +77,13 @@ class Base() :
 
 # ----------------------------------------------------------------------
     async def send( self, op, data={} ): 
-        if Base.ws :
-            await self.ws.send( json.dumps({ 'op':op, 'data':data, 'name':self.name }) )
+        for ws in Base.wslist:
+            try:
+                await ws.send( json.dumps({ 'op':op, 'data':data, 'name':self.name }) )
+            except Exception as ex:
+                print( ex )
+                Base.wslist.remove( ws )    
+            
             
 # ----------------------------------------------------------------------
     async def send_replace( self, elem, code ): 
@@ -85,7 +91,7 @@ class Base() :
 
 # ----------------------------------------------------------------------
     async def receive( self, ws ): 
-        Base.ws = ws
+        Base.wslist.append(ws)
         while True:
             try:
                 msg = json.loads(await ws.receive()) # wait for message
@@ -98,7 +104,41 @@ class Base() :
 
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ): 
+        #if self.handle_command_message( msg ):
+        #    return
+        #if self.handle_config_message( msg ):
+        #   return
         pass
+
+# ----------------------------------------------------------------------
+    async def handle_config_message( self, msg ):
+        section = msg['section'] 
+         # { section:config_items, key:itemid, button:clickedbutton, value:value} 
+        if section !=  f'{self.name}_config_items' :
+            return False
+        button = msg.get('button','')
+        key = msg.get('key','')
+        if button == 'save':
+            self.config_items.set_value( key, msg.get('value',''))
+        if button == 'remove':
+            self.config_items.remove( key )
+        return True
+
+# ----------------------------------------------------------------------
+    async def handle_command_message( self, msg ):
+        section = msg['section'] 
+         # { section:config_items, key:itemid, button:clickedbutton, value:value} 
+        if section != f'{self.name}_command_items' : 
+            return False
+        key = msg.get('key','')
+        if self.command_items.isasync(key):
+            print('await')
+            await self.command_items.func(key)()
+        else:    
+            print('direct')
+            self.command_items.func( key )()
+        return True
+
 
 # ----------------------------------------------------------------------
     async def task( self, pause = 5 ): 

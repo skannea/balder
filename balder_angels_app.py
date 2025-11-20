@@ -22,16 +22,19 @@ class App(Base):
  
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ): 
-        section = msg['section']
-        # { section:command_items, key:commandkey  }
-        if section == f'{self.name}_command_items' : 
-            await self.command_items.run(  msg )
+        if await self.handle_command_message( msg ):
             return
-        elif section ==  f'{self.name}_config_items' :
-            self.config_items.action( msg )
+        if await self.handle_config_message( msg ):
             return
+        
+        section = msg.get('section','')
+
+        if section == 'begin': # browser has started, awaits sections content
+            await self.standard_sections_update()
+            await self.send_replace( 'app_section', self.standard_sections_html() + self.permit_html() )
+            await self.standard_sections_update()
         # { section:'orientation', alpha:int, beta:int, gamma:int  }
-        if section == f'{self.name}_orientation' : 
+        elif section == f'{self.name}_orientation' : 
             self.orientation_changes += 1
             if self.stop :
                 return
@@ -46,10 +49,7 @@ class App(Base):
             await self.send_replace( f'{self.name}_orientation', html)
             return
                     
-        elif msg.get('key','') == 'begin': # browser has started, awaits sections content
-            
-            await self.send_replace( 'app_section', self.standard_sections_html() + self.permit_html() )
-            await self.standard_sections_update()
+   
         
             
                 

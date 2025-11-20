@@ -37,6 +37,7 @@ async def main():
     # setup and start tasks for page and websockets
     com = Com('com')
     # start the server in a background task
+    print(f'Connect to Balder server: {com.config_items.value("pageurl")}')
     await asyncio.create_task( dot.start_server( debug=True) )
 
 # ----------------------------------------------------------------------
