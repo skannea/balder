@@ -41,8 +41,12 @@ function setup( wsurl ) {
     logger( 'setup' )
     statusline('awaiting connection'); 
     
-    socket = new WebSocket(wsurl);
+    wsurl = window.location.href;
+    wsurl = wsurl.replace( 'http', 'ws' );
+    wsurl = wsurl.replace( 'page', 'ws' );
     
+    socket = new WebSocket(wsurl);
+    logger("wsurl=" + wsurl); 
     socket.addEventListener('open', 
       function () {
         logger("Connected to server, sending start");
