@@ -87,15 +87,12 @@ function on_command_click( section, key ) {
        })
   }
 
-
-
 // -----------------------------------
 async function on_file_click( file ) {
   logger( 'on_file: '+ file ); 
   send({ 'section':'file', 'file': file  } )
 
   }
-
 
 // -----------------------------------
 function receive(event) {
@@ -104,7 +101,6 @@ function receive(event) {
   ev = JSON.parse( event.data )
     
     let op = ev.op;
-    //statusline('op='+op); 
     
  
     logger( 'operation: ' + op )  
@@ -127,14 +123,10 @@ function receive(event) {
     logger( 'reload' );  
     //socket.close(); 
     location.reload();
+    }
+
+    else app_receive( ev.op, ev.data );
     
-}
-    else if ( op == 'appstop' ) { 
-    device_orientation.stop = true;
-}
-    else if ( op == 'appgo' ) { 
-    device_orientation.stop = false;
-}
 }
 
 // -----------------------------------
@@ -148,11 +140,6 @@ function send(obj) {
     logger("Could not send to server: " + obj)
   }  
 }
-
-
-
-
-
 
 // -----------------------------------
 function on_file_select( input ) {
@@ -180,69 +167,5 @@ function on_file_select( input ) {
   //reader.readAsText(file);
   reader.readAsArrayBuffer(file);
 }
-
-
-let device_orientation = { alpha:0, beta:0, gamma:0, stop:false };
-
-
-// -----------------------------------
-function handleOrientation(event) {
-  if (device_orientation.stop) return;
-  const alpha = Math.round(event.alpha);
-  const beta = Math.round(event.beta);
-  const gamma = Math.round(event.gamma);
-
-  // Do stuff with the new orientation data  
-  
-  if ( device_orientation.alpha != alpha ||
-       device_orientation.beta  != beta  ||
-       device_orientation.gamma != gamma ) {  
-        
-    device_orientation.alpha = alpha;
-    device_orientation.beta = beta;
-    device_orientation.gamma = gamma;
-  send({ 'section':'app_orientation', 
-         'alpha': alpha,
-         'beta':  beta,
-         'gamma': gamma } )  
- 
-  }  
-
-}
-
-
-// -----------------------------------
-function onPermissionClick() {
-  if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    // Handle iOS 13+ devices.
-    DeviceMotionEvent.requestPermission()
-      .then((state) => {
-        if (state === 'granted') {
-          window.addEventListener('deviceorientation', handleOrientation);
-        } else {
-          logger('Request to access the orientation was rejected');
-          test_element.innerHTML = 'Not permitted';
-        }
-      })
-      .catch(console.error);
-  } else {
-    // Handle regular non iOS 13+ devices.
-    window.addEventListener('deviceorientation', handleOrientation);
-  }
-}
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
 
 
