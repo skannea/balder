@@ -107,7 +107,7 @@ function receive(event) {
     //statusline('op='+op); 
     
  
-    logger( 'operation: ' + op )
+    logger( 'operation: ' + op )  
     if (op == 'replace') {
         let elem = document.getElementById(ev.data.element)
         elem.innerHTML = ev.data.html;
