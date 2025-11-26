@@ -106,6 +106,13 @@ function on_command_click( section, key ) {
 // -----------------------------------
 async function on_file_click( file ) {
   logger( 'on_file: '+ file ); 
+  send({ 'section':'file', 'file': file  } )
+
+  }
+
+// -----------------------------------
+async function zzon_file_click( file ) {
+  logger( 'on_file: '+ file ); 
   const url = "https://skannea.github.io/balder/"+file;
   try {
     const response = await fetch(url);
