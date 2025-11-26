@@ -1,28 +1,14 @@
-/*
-balder.js
-
-*/
-
-// -----------------------------------
-//Global constants are set in html file by server on  
-//<script 
-// var url=...
-// 
-// </script>
-
-
 let socket;
 let statusline_element;
-let loggerdiv;
-let current_device = '';
 let statusitems = [];
 
+let loggerdiv;
+
+let current_device = '';
 let test_element ;
   
 // -----------------------------------
 function logger(s) {
-  //if (credentials.log == 'screen') loggerdiv.innerHTML += ( s + '<br>' )
-  //if (credentials.log != 'none')   
     console.log(s)
 }
 
@@ -109,32 +95,6 @@ async function on_file_click( file ) {
   send({ 'section':'file', 'file': file  } )
 
   }
-
-// -----------------------------------
-async function zzon_file_click( file ) {
-  logger( 'on_file: '+ file ); 
-  const url = "https://skannea.github.io/balder/"+file;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
-    const result =  await response.text() ;
-    send({ 'section':'file',
-           'file':   file, 
-           'button':    'upload',
-           'tag':    '3', 
-           'content':  result} )
-
-    logger( file + " uploaded. size:" + result.length  );
-
-  } catch (error) {
-    logger(error.message);
-  }
-  }
-
-
 
 
 // -----------------------------------
@@ -251,7 +211,6 @@ function handleOrientation(event) {
 }
 
 
-
 // -----------------------------------
 function onPermissionClick() {
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -261,7 +220,7 @@ function onPermissionClick() {
         if (state === 'granted') {
           window.addEventListener('deviceorientation', handleOrientation);
         } else {
-          console.error('Request to access the orientation was rejected');
+          logger('Request to access the orientation was rejected');
           test_element.innerHTML = 'Not permitted';
         }
       })
