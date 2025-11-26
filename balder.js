@@ -35,9 +35,8 @@ function setup( wsurl ) {
     logger("wsurl=" + wsurl); 
     socket.addEventListener('open', 
       function () {
-        logger("Connected to server, sending start");
+        logger("Connected to server, sending begin");
         send({ 'section':'begin' } );
-        send({ 'section':'files', 'filelist': filelist } );
         statusline('connected');
       });
   
