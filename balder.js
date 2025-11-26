@@ -20,7 +20,7 @@ function statusline(s) {
 
 }
 
-// -----------------------------------
+// -----------------------------------   
 function setup( wsurl ) {
     statusline_element = document.getElementById("statusline")
     loggerdiv = document.getElementById("log_items")
