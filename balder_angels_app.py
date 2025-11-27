@@ -17,7 +17,7 @@ class App(Base):
         self.array = [1,2,3,4,5]
         self.state = 'running'
         self.reports = 0
-        asyncio.create_task( self.report_task() )
+        #asyncio.create_task( self.report_task() )
         
  
 # ----------------------------------------------------------------------
@@ -30,7 +30,6 @@ class App(Base):
         section = msg.get('section','')
 
         if section == 'begin': # browser has started, awaits sections content
-            await self.standard_sections_update()
             await self.send_replace( 'app_section', self.standard_sections_html() + self.permit_html() )
             await self.standard_sections_update()
         # { section:'orientation', alpha:int, beta:int, gamma:int  }
@@ -56,6 +55,18 @@ class App(Base):
 # ----------------------------------------------------------------------
     def command_items_setup( self  ): 
         
+                
+        def lognoD():
+            self.loglevel('IE')
+        self.command_items.set_name_func('lognod', 'Log level I+E', lognoD )
+        
+        def lognoI():
+            self.loglevel('E')
+        self.command_items.set_name_func('lognoi', 'Log level only E', lognoI )
+
+        def f(): asyncio.create_task( self.report_task() )
+        self.command_items.set_name_func('starttask', 'Start report task', f )    
+                
         def f(): self.stop = True
         self.command_items.set_name_func('servstop', 'Stop in server', f )    
             
@@ -94,4 +105,5 @@ class App(Base):
         while True:
             await asyncio.sleep(pause)
             self.reports += 1
-            await self.send_replace( f'{self.name}_state_items', self.state_items.html( f'{self.name}_state_items'))
+            await self.state_section_update()
+            
