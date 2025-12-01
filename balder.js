@@ -21,13 +21,13 @@ function statusline(s) {
 }
 
 // -----------------------------------      
-function setup( wsurl ) {
+function setup(  ) {
     statusline_element = document.getElementById("statusline")
     loggerdiv = document.getElementById("log_items")
     logger( 'setup' )
     statusline('awaiting connection'); 
     
-    wsurl = window.location.href;
+    let wsurl = window.location.href;
     wsurl = wsurl.replace( 'http', 'ws' );
     wsurl = wsurl.replace( 'page', 'ws' );
     

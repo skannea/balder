@@ -1,0 +1,40 @@
+D-com   2025-11-23 03:51:18   A debug message
+D-com   2025-11-23 03:51:18   direct
+D-com   2025-11-23 03:51:18   A debug message
+D-com   2025-11-23 03:51:18   direct
+D-com   2025-11-23 03:51:18   A debug message
+D-com   2025-11-23 03:51:19   direct
+D-com   2025-11-23 03:51:19   A debug message
+D-com   2025-11-23 03:51:19   direct
+D-com   2025-11-23 03:51:19   A debug message
+D-com   2025-11-23 03:51:19   direct
+D-com   2025-11-23 03:51:19   A debug message
+D-com   2025-11-23 03:51:19   direct
+D-com   2025-11-23 03:51:19   A debug message
+D-com   2025-11-23 03:51:20   direct
+D-com   2025-11-23 03:51:20   A debug message
+D-com   2025-11-23 03:51:20   direct
+D-com   2025-11-23 03:51:20   A debug message
+D-com   2025-11-23 03:51:20   direct
+D-com   2025-11-23 03:51:20   A debug message
+D-com   2025-11-23 03:51:21   direct
+D-com   2025-11-23 03:51:21   A debug message
+D-com   2025-11-23 03:51:21   direct
+D-com   2025-11-23 03:51:21   A debug message
+D-com   2025-11-23 03:51:21   direct
+D-com   2025-11-23 03:51:21   A debug message
+D-com   2025-11-23 03:51:21   direct
+D-com   2025-11-23 03:51:21   A debug message
+D-com   2025-11-23 03:51:22   direct
+D-com   2025-11-23 03:51:22   A debug message
+D-com   2025-11-23 03:51:22   direct
+D-com   2025-11-23 03:51:22   A debug message
+D-com   2025-11-23 03:51:22   direct
+D-com   2025-11-23 03:51:22   A debug message
+D-com   2025-11-23 03:51:22   direct
+D-com   2025-11-23 03:51:22   A debug message
+D-com   2025-11-23 03:51:23   direct
+D-com   2025-11-23 03:51:23   A debug message
+D-com   2025-11-23 03:51:23   direct
+D-com   2025-11-23 03:51:23   A debug message
+D-com   2025-11-23 03:51:28   direct

@@ -1,5 +1,4 @@
 from collections import OrderedDict
-import json
 
 class Items():
 
@@ -45,18 +44,11 @@ class ConfigItems(Items):
     def set_name_value( self, key, name, value ):
         self.set( key, name, str(value)) 
 
-    def default_name_value( self, key, name, value ):
-        if not key in self.dict:
-            self.set( key, name, str(value)) 
-
     def set_value( self, key, value ):
         self.dict[key][1] = str(value) 
 
-    def value( self, key, defau=''):
-        try:
-            return self.dict[key][1] 
-        except:
-            return defau
+    def value( self, key ):
+        return self.dict[key][1] 
 
     def float( self, key ):
         try:
@@ -69,36 +61,6 @@ class ConfigItems(Items):
             return int(self.value(key))
         except: 
             return 0 
-
-    def bool( self, key ):
-        if self.value(key).strip() == '':
-            return False
-        if self.int(self.value(key)) == 1:
-            return True
-        if self.value(key).upper() == 'TRUE':
-            return True
-        if self.value(key).upper() == 'ON':
-            return True
-        if self.value(key).upper() == 'YES':
-            return True
-        return False
-
-    
-
-# ----------------------------------------------------------------------
-    def store( self, filename ):
-        ''' store config items to file '''
-        with open( filename, 'w' , encoding="utf-8") as f:
-            json.dump( self.dict, f )
- 
-# ----------------------------------------------------------------------
-    def retrieve( self, filename ):
-        ''' get config items from file '''
-        try:
-            with open( filename, 'r' , encoding="utf-8") as f:
-                self.dict = json.load(f)
-        except: 
-            print( f'No config file {filename} found' )
 
 
 class StateItems(Items):
