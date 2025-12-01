@@ -12,7 +12,7 @@ class Exec(Base):
 # ----------------------------------------------------------------------
     def init( self ): 
         
-        self.failure  = asyncio.Event()   # event variable that is set when an app error occurs
+        self.failure  = asyncio.Event()   # event variable that is set when an app error occurs  
         self.resume   = asyncio.Event()   # event variable that is set to resume app exeution
         self.fallback = False
         self.auto = False
