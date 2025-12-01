@@ -79,7 +79,7 @@ class Com(Base) :
         self.exec.standard_sections_html() +
         self.section_html('files', 'Files', False, self.file_select_html() ))}
    
-   {self.supersection_html( app_sect, 'Application', False) }
+   {self.supersection_html( app_sect, 'Application', False) } 
 
    {self.section_html( log_sect, 'Log', True, '<div class="logs"><table id="log_table"></table></div>')}
 
