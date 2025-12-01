@@ -32,6 +32,7 @@ class Com(Base) :
             self.git_current[file] = self.git_new[file]
             with open( 'gitfiles.json', 'w' , encoding="utf-8") as f:
                 json.dump( self.git_current, f )
+            await self.send_replace( 'files', self.section_html('files', 'Files', True, self.file_select_html() )  )  
             return
 
 
