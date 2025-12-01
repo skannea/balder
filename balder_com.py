@@ -1,6 +1,7 @@
 import machine
 #from arduino_alvik import ArduinoAlvik
 import asyncio
+import json
 import log
 import os
 from balder_base import Base
@@ -12,7 +13,9 @@ class Com(Base) :
 # ----------------------------------------------------------------------
     def init( self ):
         asyncio.create_task( self.send_log_task() )
-        self.files = {}
+        self.git_current = {}
+        self.git_new = {}
+        
         self.exec = Exec( self.levels[1:] ) 
         
     
@@ -26,6 +29,9 @@ class Com(Base) :
             file =  msg.get('file','')
             url =  f"{self.config_items.value('resourceurl')}/{file}"
             self.fetch_file( url, file ) 
+            self.git_current[file] = self.git_new[file]
+            with open( 'gitfiles.json', 'w' , encoding="utf-8") as f:
+                json.dump( self.git_current, f )
             return
 
 
@@ -77,7 +83,7 @@ class Com(Base) :
 
    {self.supersection_html( exe_sect, 'Execution', False, 
         self.exec.standard_sections_html() +
-        self.section_html('files', 'Files', False, self.file_select_html() ))}
+        self.section_html('files', 'Files', False, self.file_select_html() ))}  
    
    {self.supersection_html( app_sect, 'Application', False) } 
 
@@ -91,26 +97,33 @@ class Com(Base) :
 
 # ----------------------------------------------------------------------
     def file_select_html(self ) : # [ {file:x.py, desc:blabla}, ... ]
-        #return '' # §§
+        try:
+            with open( 'gitfiles.json', 'r' , encoding="utf-8") as f:
+                self.git_current = json.load(f)
+        except: 
+            print( f'No  file found' )
+            self.git_current = {} 
+
         resp = self.make_request( self.config_items.value('listurl'), {'User-Agent': 'balder'} )
         #print( resp.text)
-        it = {}
+        self.git_new = {}
        
 
         code = ''
-        for file in resp.json()['tree']:
-            filename = file['path']
-            desc = file['sha']
-            it[filename]=desc
-            if self.files.get(filename,'') != desc :
-                desc = '*'+desc
+        for tree in resp.json()['tree']:
+            filename = tree['path']
+            sha = tree['sha']
+            self.git_new[filename] = sha
+            desc = 'not changed'
+            if self.git_current.get(filename,'') != sha :
+                self.debug( f'File {filename} is updated')
+                desc = 'changed'
             code += f'''
               <div>
                 <input class="short" disabled value="{filename}"/>
                 <input class="long"  disabled value="{desc}" />
                 <button onclick="on_file_click( '{filename}' )">Upload</button>
               </div>'''
-        self.files = it    
         return code
 
  
