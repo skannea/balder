@@ -98,11 +98,14 @@ class Com(Base) :
     def file_select_html(self ) : # [ {file:x.py, desc:blabla}, ... ]
         #return '' # §§
         resp = self.make_request( self.config_items.value('listurl'), {'User-Agent': 'balder'} )
-        print( resp.text)
+        #print( resp.text)
+
+       
+
         code = ''
         for file in resp.json()['tree']:
             filename = file['path']
-            desc = filename 
+            desc = file['sha']
             code += f'''
               <div>
                 <input class="short" disabled value="{filename}"/>
