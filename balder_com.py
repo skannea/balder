@@ -60,7 +60,7 @@ class Com(Base) :
 <!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
-  <title >Baldur</title>
+  <title >Baldor</title>
   <link rel="icon" type="image/x-icon" href="{resourceurl}/balder.svg">
   <link rel="stylesheet" href="{resourceurl}/balder.css">
   
