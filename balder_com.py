@@ -12,7 +12,7 @@ class Com(Base) :
 # ----------------------------------------------------------------------
     def init( self ):
         asyncio.create_task( self.send_log_task() )
-        
+        self.files = {}
         self.exec = Exec( self.levels[1:] ) 
         
     
@@ -39,12 +39,7 @@ class Com(Base) :
         await self.exec.forward_message( msg ) 
 
 
-    async def xxxfetch_task( self, filename ) :
-        resp = requests.get( f"{self.config_items.value('resourceurl')}/{filename}" )
-        self.debug ( f'Downloading file: z_{filename} size {len(resp.content)} bytes' )
-        with open( filename, 'wb') as fd:
-            fd.write(resp.content) 
-          
+            
             
 # ----------------------------------------------------------------------
     def get_page( self, request ): 
@@ -99,19 +94,23 @@ class Com(Base) :
         #return '' # §§
         resp = self.make_request( self.config_items.value('listurl'), {'User-Agent': 'balder'} )
         #print( resp.text)
-
+        it = {}
        
 
         code = ''
         for file in resp.json()['tree']:
             filename = file['path']
             desc = file['sha']
+            it[filename]=desc
+            if self.files.get(filename,'') != desc :
+                desc = '*'+desc
             code += f'''
               <div>
                 <input class="short" disabled value="{filename}"/>
                 <input class="long"  disabled value="{desc}" />
                 <button onclick="on_file_click( '{filename}' )">Upload</button>
               </div>'''
+        self.files = it    
         return code
 
  
