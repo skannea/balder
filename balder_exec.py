@@ -68,7 +68,7 @@ class Exec(Base):
                         filename = tree['path']
                         sha = tree['sha']
                         self.git_new[filename] = sha
-                        desc = 'not changed'
+                        desc = 'not'
                         if self.git_current.get(filename,'') != sha : # detect changed file
                             self.debug( f'File {filename} is changed')
                             desc = 'changed'
@@ -81,7 +81,7 @@ class Exec(Base):
                         await asyncio.sleep(0)
     
                     self.debug( f'{n=}')
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(0.1)
                     await self.send_replace( 'files', code  )  
     
                 except Exception as ex: 
