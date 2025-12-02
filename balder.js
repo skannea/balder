@@ -87,9 +87,9 @@ function on_command_click( section, key ) {
   }
 
 // -----------------------------------
-async function on_file_click( file ) {
+async function on_file_click( section, button, file='' ) {
   logger( 'on_file: '+ file ); 
-  send({ 'section':'file', 'file': file  } )
+  send({ 'section':section, 'file': file, 'button': button  } )
 
   }
 

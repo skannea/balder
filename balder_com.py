@@ -1,7 +1,6 @@
 import machine
 #from arduino_alvik import ArduinoAlvik
 import asyncio
-import json
 import log
 import os
 from balder_base import Base
@@ -13,8 +12,6 @@ class Com(Base) :
 # ----------------------------------------------------------------------
     def init( self ):
         asyncio.create_task( self.send_log_task() )
-        self.git_current = {}
-        self.git_new = {}
         
         self.exec = Exec( self.levels[1:] ) 
         
@@ -23,18 +20,6 @@ class Com(Base) :
     async def handle_message( self, msg ):
         
         section = msg.get('section','')
-        
-        if section == 'file': # file upload request --> start task thet fetches file and writes to disk 
-            #asyncio.create_task( self.fetch_task( msg.get('file','') ) )
-            file =  msg.get('file','')
-            url =  f"{self.config_items.value('resourceurl')}/{file}"
-            self.fetch_file( url, file ) 
-            self.git_current[file] = self.git_new[file]
-            with open( 'gitfiles.json', 'w' , encoding="utf-8") as f:
-                json.dump( self.git_current, f )
-            await self.send_replace( 'files', self.section_html('files', 'Files', True, self.file_select_html() )  )  
-            return
-
 
         if section == 'begin': # a browser has started, awaits sections content
             log.reset() # mark all stored log items as unsent
@@ -45,8 +30,6 @@ class Com(Base) :
         # if not yet returned, forward to exec  ----->
         await self.exec.forward_message( msg ) 
 
-
-            
             
 # ----------------------------------------------------------------------
     def get_page( self, request ): 
@@ -95,53 +78,13 @@ class Com(Base) :
 </body>
 </html>   
 '''
-
-# ----------------------------------------------------------------------
-    def file_select_html(self ) : # [ {file:x.py, desc:blabla}, ... ]
-        try:
-            with open( 'gitfiles.json', 'r' , encoding="utf-8") as f:
-                self.git_current = json.load(f)
-        except: 
-            print( f'No  file found' )
-            self.git_current = {} 
-
-        resp = self.make_request( self.config_items.value('listurl'), {'User-Agent': 'balder'} )
-        #print( resp.text)
-        self.git_new = {}
-       
-
-        code = ''
-        for tree in resp.json()['tree']:
-            filename = tree['path']
-            sha = tree['sha']
-            self.git_new[filename] = sha
-            desc = 'not changed'
-            if self.git_current.get(filename,'') != sha :
-                self.debug( f'File {filename} is updated')
-                desc = 'changed'
-            code += f'''
-              <div>
-                <input class="short" disabled value="{filename}"/>
-                <input class="long"  disabled value="{desc}" />
-                <button onclick="on_file_click( '{filename}' )">Upload</button>
-              </div>'''
-        return code
-
- 
-   
  
 
 # ----------------------------------------------------------------------
     def config_items_setup( self ): 
-        self.config_items.default_name_value('name',   'Namn', 'Balder')
-        self.config_items.default_name_value('ssid',   'WiFi', 'Monarki') 
         self.config_items.default_name_value('connect_retries', 'Retries', '5') 
-        self.config_items.default_name_value('resourceurl', 'Resource URL', 'https://skannea.github.io/balder')
-        self.config_items.default_name_value('listurl', 'List URL', 'https://api.github.com/repos/skannea/balder/git/trees/main')
-        self.config_items.default_name_value('pageurl', 'Page URL',  'https://vicker.tplinkdns.com:443/balder/page')
-        self.config_items.default_name_value('wsurl', 'WebSocket URL', 'https://vicker.tplinkdns.com:443/balder/ws')
-        self.secrets = { 'Monarki': '' } # wifi credentials
-
+        self.config_items.default_name_value('resourceurl', 'Page files URL', 'https://skannea.github.io/balder')
+        
 
 # ----------------------------------------------------------------------
     def command_items_setup( self ): 

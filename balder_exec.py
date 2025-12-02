@@ -1,4 +1,5 @@
 import asyncio
+import json
 import sys
 import gc
 from balder_base import Base
@@ -18,25 +19,74 @@ class Exec(Base):
         self.auto = False
         self.app = None
         asyncio.create_task( self.execute_task(  ) )
+        
+        self.git_current = {}
+        self.git_new = {}
+
             
 # ----------------------------------------------------------------------
     def config_items_setup( self ): 
-        self.config_items.default_name_value('runapp',   'App to run', '')
+        self.config_items.default_name_value('resourceurl', 'File store', 'https://skannea.github.io/balder')
+        self.config_items.default_name_value('listurl',     'File list URL', 'https://api.github.com/repos/skannea/balder/git/trees/main')
+        self.config_items.default_name_value('runapp',      'App to run', '')
         self.config_items.default_name_value('backupapp',   'Fallback app', '')
+
 
 # ----------------------------------------------------------------------
     async def handle_message( self, msg ): 
+        section = msg.get('section','')
 
-        if msg.get('section','') == 'file': # file upload request --> start task thet fetches file and writes to disk 
-            asyncio.create_task( self.fetch_task( msg.get('file','') ) )
-            return
-
+        if section == 'file': 
+            button =  msg.get('button','')
+            
+            if button == 'fetch': 
+                # fetch and store file, 
+                # mark file as not changed in gitfiles.json
+                file =  msg.get('file','')
+                url =  f"{self.config_items.value('resourceurl')}/{file}"
+                self.fetch_file( url, file ) 
+                self.git_current[file] = self.git_new[file]
+                with open( 'gitfiles.json', 'w' , encoding="utf-8") as f:
+                    json.dump( self.git_current, f )
+                return
+        
+            if button == 'scan' : #or button == 'fetch':
+                # read gitfiles.json for current files list
+                # fetch git file list to find out changed files
+                # update files section
+                try:
+                    with open( 'gitfiles.json', 'r' , encoding="utf-8") as f:
+                        self.git_current = json.load(f)
+                except: 
+                    self.error( f'No git files found' )
+                    self.git_current = {} 
+                
+                resp = self.make_request( self.config_items.value('listurl'), {'User-Agent': 'balder'} )
+                self.git_new = {}
+                code = '''<button onclick="on_file_click( 'files', 'scan')">Scan files</button><br>'''
+                for tree in resp.json()['tree']:
+                    filename = tree['path']
+                    sha = tree['sha']
+                    self.git_new[filename] = sha
+                    desc = 'not changed'
+                    if self.git_current.get(filename,'') != sha : # detect changed file
+                        self.debug( f'File {filename} is updated')
+                        desc = 'changed'
+                    code += f'''
+                      <div>
+                        <input class="short" disabled value="{filename}"/>
+                        <input class="long"  disabled value="{desc}" />
+                        <button onclick="on_file_click( 'files', 'fetch', '{filename}')">Update file</button>
+                      </div>'''
+                await self.send_replace( 'files', code  )  
+                return
+        
 
 
         if self.app: 
             await self.app.forward_message(msg)
         
-        
+       
 
                 
 # ----------------------------------------------------------------------
