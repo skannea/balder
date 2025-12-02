@@ -36,9 +36,10 @@ class Exec(Base):
     async def handle_message( self, msg ): 
         section = msg.get('section','')
 
-        if section == 'file': 
+        if section == 'files': 
             button =  msg.get('button','')
-            
+            self.debug(f'files {button=}')
+                
             if button == 'fetch': 
                 # fetch and store file, 
                 # mark file as not changed in gitfiles.json
@@ -57,36 +58,45 @@ class Exec(Base):
                 try:
                     with open( 'gitfiles.json', 'r' , encoding="utf-8") as f:
                         self.git_current = json.load(f)
-                except: 
-                    self.error( f'No git files found' )
-                    self.git_current = {} 
                 
-                resp = self.make_request( self.config_items.value('listurl'), {'User-Agent': 'balder'} )
-                self.git_new = {}
-                code = '''<button onclick="on_file_click( 'files', 'scan')">Scan files</button><br>'''
-                for tree in resp.json()['tree']:
-                    filename = tree['path']
-                    sha = tree['sha']
-                    self.git_new[filename] = sha
-                    desc = 'not changed'
-                    if self.git_current.get(filename,'') != sha : # detect changed file
-                        self.debug( f'File {filename} is updated')
-                        desc = 'changed'
-                    code += f'''
-                      <div>
-                        <input class="short" disabled value="{filename}"/>
-                        <input class="long"  disabled value="{desc}" />
-                        <button onclick="on_file_click( 'files', 'fetch', '{filename}')">Update file</button>
-                      </div>'''
-                await self.send_replace( 'files', code  )  
-                return
+                    resp = self.make_request( self.config_items.value('listurl'), {'User-Agent': 'balder'} )
+                    self.git_new = {}
+                    code = self.files_section_html()
+                    n=0
+                    for tree in resp.json()['tree']:
+                        n+=1
+                        filename = tree['path']
+                        sha = tree['sha']
+                        self.git_new[filename] = sha
+                        desc = 'not changed'
+                        if self.git_current.get(filename,'') != sha : # detect changed file
+                            self.debug( f'File {filename} is changed')
+                            desc = 'changed'
+                        code += f'''
+                          <div>
+                            <input class="short" disabled value="{filename}"/>
+                            <input class="long"  disabled value="{desc}" />
+                            <button onclick="on_file_click( 'files', 'fetch', '{filename}')">Update file</button>
+                          </div>'''
+                        await asyncio.sleep(0)
+    
+                    self.debug( f'{n=}')
+                    await asyncio.sleep(1)
+                    await self.send_replace( 'files', code  )  
+    
+                except Exception as ex: 
+                    self.error( f'handle_message files scan failed: {ex}' )
+                
         
 
 
         if self.app: 
             await self.app.forward_message(msg)
         
-       
+# ----------------------------------------------------------------------
+    def files_section_html( self  ): 
+        return '''<button onclick="on_file_click( 'files', 'scan')">Scan files</button><br>'''
+                
 
                 
 # ----------------------------------------------------------------------

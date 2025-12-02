@@ -65,7 +65,9 @@ class Com(Base) :
            '<div id="statusline">---</div><button onclick="reload();">Reload</button>'
         ))}
 
-   {self.supersection_html( exe_sect, 'Execution', False, self.exec.standard_sections_html()) }  
+   {self.supersection_html( exe_sect, 'Execution', False, 
+                           self.exec.standard_sections_html()
+                           + self.section_html( 'files', 'Source files', False, self.exec.files_section_html())) }  
    
    {self.supersection_html( app_sect, 'Application', False) } 
 

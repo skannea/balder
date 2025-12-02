@@ -172,7 +172,11 @@ class Base() :
 
 # ----------------------------------------------------------------------
     def make_request( self, requesturl, headers = {} ) :
-        return requests.get( requesturl, headers=headers )
+        resp = requests.get( requesturl, headers=headers )
+        if resp.status_code != 200:
+            raise( self.error(f'make_request got bad response: {resp.status_code}'))
+        #resp.close()
+        return resp    
 
 # ----------------------------------------------------------------------
     def fetch_file( self, fetchfile, storefile ) :
