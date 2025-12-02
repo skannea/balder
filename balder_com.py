@@ -117,12 +117,12 @@ class Com(Base) :
             
 
         def log_debug():
-            self.debug( 'A debugtest message')
+            self.debug( 'A debug test message')
         self.command_items.set_name_func('log_debug', 'Debug message', log_debug )
         
         def log_info():
             self.info('An info test message')
-        self.command_items.set_name_func('log_info', 'Issue an info message', log_info )
+        self.command_items.set_name_func('log_info', 'Info message', log_info )
         
         def log_error():
             self.error('An error test message')
