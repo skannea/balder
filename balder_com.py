@@ -118,7 +118,7 @@ class Com(Base) :
 
         def log_debug():
             self.debug( 'A debugtest message')
-        self.command_items.set_name_func('log_debug', 'Issue a debug message', log_debug )
+        self.command_items.set_name_func('log_debug', 'Debug message', log_debug )
         
         def log_info():
             self.info('An info test message')
