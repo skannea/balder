@@ -111,14 +111,10 @@ class Com(Base) :
 
 
         def logend():
-            log.end('balder_log.txt') 
+            log.end() 
         self.command_items.set_name_func('logend', 'Store log', logend )
 
-        def end():
-            log.end('balder_log.txt')
-            exit(0) 
-        self.command_items.set_name_func('end', 'Exit', end )
-    
+            
 
         def log_debug():
             self.debug( 'A debugtest message')
