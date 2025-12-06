@@ -80,9 +80,8 @@ function on_config_click( section, elem, button ) {
   }
 
 // -----------------------------------
-function on_command_click( elem, section, key ) {
-  elem.style.color = 'red';
-  send({ 'section':section, 
+function on_command_click( section, key ) {
+    send({ 'section':section, 
          'key': key, 
        })
   }
