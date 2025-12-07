@@ -71,8 +71,25 @@ function showhide( div ) {
 }
 
 
+
 // -----------------------------------
-function on_config_click( section, elem, button ) {
+function on_config_click( section, button ) {
+  dict = {};
+  sectionelement = document.getElementById( section );
+  elem = sectionelement.firstElementChild;
+  while (true) {
+      if ( elem.id ) dict[ elem.id ] = elem.value;
+      if (elem == sectionelement.lastElementChild) break;
+      elem = elem.nextElementSibling;
+    }
+  
+
+  send({ 'section':section, 
+         'button': button, 
+         'values': dict } )
+  }
+// -----------------------------------
+function XXon_config_click( section, elem, button ) {
   send({ 'section':section, 
          'button': button, 
          'key':    elem.parentElement.id, 
