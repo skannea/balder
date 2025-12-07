@@ -58,7 +58,7 @@ function setup(  ) {
 
 
 // -----------------------------------
-function reload() {
+function reload() { 
   statusline('reloading');
   socket.close();
   setTimeout( function() { location.reload(); }, 2000 );
